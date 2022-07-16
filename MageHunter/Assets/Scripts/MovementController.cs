@@ -9,8 +9,8 @@ public class MovementController : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] private float movementSpeed = 10.0f;
-    [Range(0, .3f)] [SerializeField] private float movementSmoothing = .01f;
-
+    [Range(0.0f, 0.5f)][SerializeField] float movementSmoothing = 0.1f;
+    
     [Header("Jumping")]
     [SerializeField] private bool airControl = false;
     [SerializeField] private float jumpForce = 40.0f;
@@ -61,8 +61,13 @@ public class MovementController : MonoBehaviour
     {
         if (isGrounded || airControl)
         {
-            Vector3 targetVelocity = new Vector2(direction * movementSpeed * Time.deltaTime, rigidbody2D.velocity.y);
-            rigidbody2D.velocity = Vector3.SmoothDamp(rigidbody2D.velocity, targetVelocity, ref currentVelocity, movementSmoothing);
+            Vector3 targetVelocity = new Vector2(direction * movementSpeed * Time.deltaTime * 5, rigidbody2D.velocity.y);
+            if (movementSmoothing > 0.0f)
+            {
+                targetVelocity = Vector3.SmoothDamp(rigidbody2D.velocity, targetVelocity, ref currentVelocity, movementSmoothing);
+            }
+            
+            rigidbody2D.velocity = targetVelocity;
 
             if (direction > 0.0f && !facingRight)
             {
@@ -86,8 +91,6 @@ public class MovementController : MonoBehaviour
     private void Flip()
     {
         facingRight = !facingRight;
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
+        transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 }

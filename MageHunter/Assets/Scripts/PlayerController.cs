@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private MovementController movementController;
+    [Header("Controllers")]
+    [SerializeField] private MovementController movementController;
+    [SerializeField] private Weapon currentWeapon;
+
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
 
     private float direction = 0.0f;
     private bool jump = false;
@@ -20,9 +24,24 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         direction = Input.GetAxisRaw("Horizontal");
+        if (Mathf.Abs(direction) > 0.0f)
+        {
+            animator.SetBool("IsMoving", true);
+        }
+        else
+        {
+            animator.SetBool("IsMoving", false);
+        }
+
         if (Input.GetButtonDown("Jump"))
         {
             jump = true;
+            animator.SetBool("IsJumping", true);
+        }
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            currentWeapon.Shoot();
         }
     }
 
@@ -34,5 +53,10 @@ public class PlayerController : MonoBehaviour
             movementController.Jump();
             jump = false;
         }
+    }
+
+    public void OnLanding()
+    {
+        animator.SetBool("IsJumping", false);
     }
 }
