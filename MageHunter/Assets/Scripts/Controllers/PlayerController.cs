@@ -6,8 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Systems")]
     [SerializeField] private InputReader inputReader;
-    [SerializeField] private MovementController movementController;
-    [SerializeField] private Weapon currentWeapon;
+    [SerializeField] private MovementComponent movementController;
+    [SerializeField] private FightingComponent fightingComponent;
 
     [SerializeField] private Animator animator;
 
@@ -17,13 +17,16 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         inputReader.moveEvent += OnMoveInitiated;
-        inputReader.jumpEvent += OnJumpInstatiated;
+        inputReader.jumpEvent += OnJumpInitiated;
+        inputReader.shootEvent += OnShootInitiated;
     }
 
     private void OnDisable()
     {
         inputReader.moveEvent -= OnMoveInitiated;
-        inputReader.jumpEvent -= OnJumpInstatiated;
+        inputReader.jumpEvent -= OnJumpInitiated;
+        inputReader.shootEvent -= OnShootInitiated;
+
     }
 
     private void FixedUpdate()
@@ -46,8 +49,13 @@ public class PlayerController : MonoBehaviour
         direction = dir;
     }
 
-    public void OnJumpInstatiated()
+    public void OnJumpInitiated()
     {
         startJump = true;
+    }
+
+    public void OnShootInitiated()
+    {
+        fightingComponent.SpawnProjectile();
     }
 }

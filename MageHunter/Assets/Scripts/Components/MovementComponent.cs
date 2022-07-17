@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MovementController : MonoBehaviour
+public class MovementComponent : MonoBehaviour
 {
     const float GROUNDED_RADIUS = .2f;
 

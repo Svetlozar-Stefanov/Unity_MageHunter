@@ -9,6 +9,8 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
     public event UnityAction jumpEvent;
     public event UnityAction<float> moveEvent;
 
+	public event UnityAction shootEvent;
+
     private GameInput gameInput;
 
 	private void OnEnable()
@@ -39,6 +41,14 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 		if (jumpEvent != null
 			&& context.phase == InputActionPhase.Performed)
 			jumpEvent.Invoke();
+	}
+
+	public void OnShoot(InputAction.CallbackContext context)
+	{
+        if (shootEvent != null && context.phase == InputActionPhase.Performed)
+        {
+			shootEvent.Invoke();
+        }
 	}
 
 	public void EnableInGameInput()
