@@ -17,7 +17,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private Transform groundCheck;
 
-    private Rigidbody2D rigidbody2D;
+    private Rigidbody2D rb2d;
     private Vector3 currentVelocity = Vector3.zero;
     private bool facingRight = true;
     private bool isGrounded;
@@ -31,7 +31,7 @@ public class MovementController : MonoBehaviour
 
     private void Awake()
     {
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        rb2d = GetComponent<Rigidbody2D>();
         if (OnLandEvent == null)
         {
             OnLandEvent = new UnityEvent();
@@ -61,13 +61,13 @@ public class MovementController : MonoBehaviour
     {
         if (isGrounded || airControl)
         {
-            Vector3 targetVelocity = new Vector2(direction * movementSpeed * Time.deltaTime * 5, rigidbody2D.velocity.y);
+            Vector3 targetVelocity = new Vector2(direction * movementSpeed * Time.deltaTime * 5, rb2d.velocity.y);
             if (movementSmoothing > 0.0f)
             {
-                targetVelocity = Vector3.SmoothDamp(rigidbody2D.velocity, targetVelocity, ref currentVelocity, movementSmoothing);
+                targetVelocity = Vector3.SmoothDamp(rb2d.velocity, targetVelocity, ref currentVelocity, movementSmoothing);
             }
             
-            rigidbody2D.velocity = targetVelocity;
+            rb2d.velocity = targetVelocity;
 
             if (direction > 0.0f && !facingRight)
             {
@@ -84,7 +84,7 @@ public class MovementController : MonoBehaviour
     {
         if (isGrounded)
         {
-            rigidbody2D.AddForce(new Vector2(0.0f, jumpForce * 10));
+            rb2d.AddForce(new Vector2(0.0f, jumpForce * 10));
         }
     }
 

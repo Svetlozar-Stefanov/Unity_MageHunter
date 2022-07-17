@@ -4,59 +4,50 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Controllers")]
+    [Header("Systems")]
+    [SerializeField] private InputReader inputReader;
     [SerializeField] private MovementController movementController;
     [SerializeField] private Weapon currentWeapon;
 
-    [Header("Animation")]
     [SerializeField] private Animator animator;
 
     private float direction = 0.0f;
-    private bool jump = false;
+    private bool startJump = false;
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-
+        inputReader.moveEvent += OnMoveInitiated;
+        inputReader.jumpEvent += OnJumpInstatiated;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        direction = Input.GetAxisRaw("Horizontal");
-        if (Mathf.Abs(direction) > 0.0f)
-        {
-            animator.SetBool("IsMoving", true);
-        }
-        else
-        {
-            animator.SetBool("IsMoving", false);
-        }
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            jump = true;
-            animator.SetBool("IsJumping", true);
-        }
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            currentWeapon.Shoot();
-        }
+        inputReader.moveEvent -= OnMoveInitiated;
+        inputReader.jumpEvent -= OnJumpInstatiated;
     }
 
     private void FixedUpdate()
     {
         movementController.Move(direction);
-        if (jump)
+        if (startJump)
         {
             movementController.Jump();
-            jump = false;
+            startJump = false;
         }
     }
 
     public void OnLanding()
     {
-        animator.SetBool("IsJumping", false);
+        animator.SetBool("IsJumping", startJump);
+    }
+
+    public void OnMoveInitiated(float dir)
+    {
+        direction = dir;
+    }
+
+    public void OnJumpInstatiated()
+    {
+        startJump = true;
     }
 }
