@@ -8,8 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputReader inputReader;
     [SerializeField] private MovementComponent movementController;
     [SerializeField] private FightingComponent fightingComponent;
-
-    [SerializeField] private Animator animator;
+    [SerializeField] private AnimatorComponent animatorComponent;
 
     private float direction = 0.0f;
     private bool startJump = false;
@@ -33,6 +32,15 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         movementController.Move(direction);
+        if (direction != 0)
+        {
+            animatorComponent.IsMoving(false);
+        }
+        else
+        {
+            animatorComponent.IsMoving(true);
+        }
+
         if (startJump)
         {
             movementController.Jump();
@@ -42,7 +50,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnLanding()
     {
-        //animator.SetBool("IsJumping", startJump);
+        animatorComponent.IsJumping(false);
     }
 
     public void OnMoveInitiated(float dir)
@@ -53,6 +61,7 @@ public class PlayerController : MonoBehaviour
     public void OnJumpInitiated()
     {
         startJump = true;
+        animatorComponent.IsJumping(true);
     }
 
     public void OnShootInitiated()
