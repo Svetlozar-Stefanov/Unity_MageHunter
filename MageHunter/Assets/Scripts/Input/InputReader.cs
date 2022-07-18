@@ -11,6 +11,8 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 
 	public event UnityAction shootEvent;
 
+	public event UnityAction<Vector2> moveMouseEvent;
+
     private GameInput gameInput;
 
 	private void OnEnable()
@@ -48,6 +50,14 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
         if (shootEvent != null && context.phase == InputActionPhase.Performed)
         {
 			shootEvent.Invoke();
+        }
+	}
+
+	public void OnMousePos(InputAction.CallbackContext context)
+	{
+        if (moveMouseEvent != null)
+        {
+			moveMouseEvent.Invoke(context.ReadValue<Vector2>());
         }
 	}
 

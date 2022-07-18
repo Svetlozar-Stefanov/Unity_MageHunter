@@ -17,25 +17,17 @@ public class MovementComponent : MonoBehaviour
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private Transform groundCheck;
 
+    [Header("Events")]
+    [SerializeField] private UnityEvent onLandEvent;
+
     private Rigidbody2D rb2d;
     private Vector3 currentVelocity = Vector3.zero;
     private bool facingRight = true;
     private bool isGrounded;
 
-    [Header("Events")]
-    [Space]
-    public UnityEvent OnLandEvent;
-
-    [System.Serializable]
-    public class BoolEvent : UnityEvent<bool> { }
-
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
-        if (OnLandEvent == null)
-        {
-            OnLandEvent = new UnityEvent();
-        }
     }
 
     private void FixedUpdate()
@@ -51,7 +43,7 @@ public class MovementComponent : MonoBehaviour
                 isGrounded = true;
                 if (!wasGrounded)
                 {
-                    OnLandEvent.Invoke();
+                    onLandEvent.Invoke();
                 }
             }
         }

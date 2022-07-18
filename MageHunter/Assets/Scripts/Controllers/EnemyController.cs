@@ -1,13 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts.Controllers;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamageableController<float>
 {
-    [SerializeField] public HealthComponent healthComponent;
+    [SerializeField] private HealthComponent healthComponent;
 
-    public void Die()
+    public void TakeDamage(float damage)
     {
-        Destroy(gameObject);
+        healthComponent.TakeDamage(damage);
     }
 }

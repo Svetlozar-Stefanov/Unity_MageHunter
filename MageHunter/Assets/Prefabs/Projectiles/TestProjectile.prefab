@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8266156368317687385}
   - component: {fileID: 9198752933104265660}
   - component: {fileID: 8284305058253765095}
-  - component: {fileID: 5437250018041475086}
+  - component: {fileID: 5829059893410336696}
   m_Layer: 0
   m_Name: TestProjectile
   m_TagString: Untagged
@@ -124,7 +124,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &5437250018041475086
+--- !u!114 &5829059893410336696
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,4 +137,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
+  damage: 10
+  lifespan: 5
   rb2d: {fileID: 8284305058253765095}

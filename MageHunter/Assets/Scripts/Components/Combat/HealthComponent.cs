@@ -3,23 +3,39 @@ using UnityEngine.Events;
 
 public class HealthComponent : MonoBehaviour
 {
+    [Header("Properties")]
     [SerializeField] private float health;
-    public UnityEvent OnDeathEvent;
+
+    [Header("Events")]
+    [SerializeField] private UnityEvent onTakeDamage;
+    [SerializeField] private UnityEvent onDeathEvent;
 
     private void Awake()
     {
-        if (OnDeathEvent == null)
+        if (onDeathEvent == null)
         {
-            OnDeathEvent = new UnityEvent();
+            onDeathEvent = new UnityEvent();
+        }
+        if (onTakeDamage == null)
+        {
+            onTakeDamage = new UnityEvent();
         }
     }
 
-    public void TakeDamage(float amount)
+    public virtual void TakeDamage(float amount)
     {
         health -= amount;
+        onTakeDamage.Invoke();
+
         if (health <= 0.0f)
         {
-            OnDeathEvent.Invoke();
+            Die();
         }
+    }
+
+    protected virtual void Die()
+    {
+        onDeathEvent.Invoke();
+        Destroy(gameObject);
     }
 }

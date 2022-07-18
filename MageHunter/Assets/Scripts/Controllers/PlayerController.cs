@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Systems")]
+    [Header("Components")]
     [SerializeField] private InputReader inputReader;
     [SerializeField] private MovementComponent movementController;
     [SerializeField] private FightingComponent fightingComponent;
@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
         inputReader.moveEvent += OnMoveInitiated;
         inputReader.jumpEvent += OnJumpInitiated;
         inputReader.shootEvent += OnShootInitiated;
+        inputReader.moveMouseEvent += OnMouseMoveInitiated;
     }
 
     private void OnDisable()
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour
         inputReader.moveEvent -= OnMoveInitiated;
         inputReader.jumpEvent -= OnJumpInitiated;
         inputReader.shootEvent -= OnShootInitiated;
-
+        inputReader.moveMouseEvent -= OnMouseMoveInitiated;
     }
 
     private void FixedUpdate()
@@ -41,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnLanding()
     {
-        animator.SetBool("IsJumping", startJump);
+        //animator.SetBool("IsJumping", startJump);
     }
 
     public void OnMoveInitiated(float dir)
@@ -57,5 +58,10 @@ public class PlayerController : MonoBehaviour
     public void OnShootInitiated()
     {
         fightingComponent.SpawnProjectile();
+    }
+
+    public void OnMouseMoveInitiated(Vector2 mousePos)
+    {
+        fightingComponent.SetMousePos(mousePos);
     }
 }
