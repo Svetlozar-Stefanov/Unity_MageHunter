@@ -12,9 +12,14 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 	public event UnityAction lightCastEvent;
 	public event UnityAction heavyCastEvent;
 
+	public event UnityAction<float> lightSpellScroll;
+	public event UnityAction<float> heavySpellScroll;
+
 	public event UnityAction<Vector2> moveMouseEvent;
 
     private GameInput gameInput;
+
+	private bool isPressedQ = false;
 
 	private void OnEnable()
 	{
@@ -68,6 +73,34 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 		{
 			heavyCastEvent.Invoke();
 		}
+	}
+
+	public void OnLightSpellScroll(InputAction.CallbackContext context)
+	{
+        if (lightSpellScroll != null)
+        {
+			lightSpellScroll.Invoke(context.ReadValue<float>());
+        }
+	}
+
+	public void OnHeavySpellScroll(InputAction.CallbackContext context)
+	{
+		if (heavySpellScroll != null && isPressedQ)
+		{
+			heavySpellScroll.Invoke(context.ReadValue<float>());
+		}
+	}
+
+	public void OnQPressed(InputAction.CallbackContext context)
+	{
+		if (context.phase == InputActionPhase.Performed)
+		{
+			isPressedQ = true;
+		}
+        if (context.phase == InputActionPhase.Canceled)
+        {
+			isPressedQ = false;
+        }
 	}
 
 	public void EnableInGameInput()

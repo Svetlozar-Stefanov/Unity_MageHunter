@@ -71,6 +71,33 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""LightSpellScroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""0c611b59-231d-4016-9d03-4badd41e57a0"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""HeavySpellScroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""8c70b980-b21c-4e29-92ba-5e1739525a51"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""QPressed"",
+                    ""type"": ""Button"",
+                    ""id"": ""deb12664-bb14-4d3c-ab1b-b32f1d2d55ff"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -205,6 +232,39 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""action"": ""MousePos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""706f0603-831a-40b4-b90f-7716dbb24b9c"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""LightSpellScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bee4769b-5a2e-402a-966f-82d364ec6d65"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""HeavySpellScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0fd9df14-976c-4f26-8e33-a1a578f47419"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""QPressed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -235,6 +295,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         m_InGame_LightSpell = m_InGame.FindAction("LightSpell", throwIfNotFound: true);
         m_InGame_HeavySpell = m_InGame.FindAction("HeavySpell", throwIfNotFound: true);
         m_InGame_MousePos = m_InGame.FindAction("MousePos", throwIfNotFound: true);
+        m_InGame_LightSpellScroll = m_InGame.FindAction("LightSpellScroll", throwIfNotFound: true);
+        m_InGame_HeavySpellScroll = m_InGame.FindAction("HeavySpellScroll", throwIfNotFound: true);
+        m_InGame_QPressed = m_InGame.FindAction("QPressed", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -299,6 +362,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_InGame_LightSpell;
     private readonly InputAction m_InGame_HeavySpell;
     private readonly InputAction m_InGame_MousePos;
+    private readonly InputAction m_InGame_LightSpellScroll;
+    private readonly InputAction m_InGame_HeavySpellScroll;
+    private readonly InputAction m_InGame_QPressed;
     public struct InGameActions
     {
         private @GameInput m_Wrapper;
@@ -308,6 +374,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         public InputAction @LightSpell => m_Wrapper.m_InGame_LightSpell;
         public InputAction @HeavySpell => m_Wrapper.m_InGame_HeavySpell;
         public InputAction @MousePos => m_Wrapper.m_InGame_MousePos;
+        public InputAction @LightSpellScroll => m_Wrapper.m_InGame_LightSpellScroll;
+        public InputAction @HeavySpellScroll => m_Wrapper.m_InGame_HeavySpellScroll;
+        public InputAction @QPressed => m_Wrapper.m_InGame_QPressed;
         public InputActionMap Get() { return m_Wrapper.m_InGame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -332,6 +401,15 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @MousePos.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnMousePos;
                 @MousePos.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnMousePos;
                 @MousePos.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnMousePos;
+                @LightSpellScroll.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnLightSpellScroll;
+                @LightSpellScroll.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnLightSpellScroll;
+                @LightSpellScroll.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnLightSpellScroll;
+                @HeavySpellScroll.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnHeavySpellScroll;
+                @HeavySpellScroll.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnHeavySpellScroll;
+                @HeavySpellScroll.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnHeavySpellScroll;
+                @QPressed.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnQPressed;
+                @QPressed.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnQPressed;
+                @QPressed.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnQPressed;
             }
             m_Wrapper.m_InGameActionsCallbackInterface = instance;
             if (instance != null)
@@ -351,6 +429,15 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @MousePos.started += instance.OnMousePos;
                 @MousePos.performed += instance.OnMousePos;
                 @MousePos.canceled += instance.OnMousePos;
+                @LightSpellScroll.started += instance.OnLightSpellScroll;
+                @LightSpellScroll.performed += instance.OnLightSpellScroll;
+                @LightSpellScroll.canceled += instance.OnLightSpellScroll;
+                @HeavySpellScroll.started += instance.OnHeavySpellScroll;
+                @HeavySpellScroll.performed += instance.OnHeavySpellScroll;
+                @HeavySpellScroll.canceled += instance.OnHeavySpellScroll;
+                @QPressed.started += instance.OnQPressed;
+                @QPressed.performed += instance.OnQPressed;
+                @QPressed.canceled += instance.OnQPressed;
             }
         }
     }
@@ -371,5 +458,8 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         void OnLightSpell(InputAction.CallbackContext context);
         void OnHeavySpell(InputAction.CallbackContext context);
         void OnMousePos(InputAction.CallbackContext context);
+        void OnLightSpellScroll(InputAction.CallbackContext context);
+        void OnHeavySpellScroll(InputAction.CallbackContext context);
+        void OnQPressed(InputAction.CallbackContext context);
     }
 }

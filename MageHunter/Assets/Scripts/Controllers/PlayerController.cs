@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
         inputReader.lightCastEvent += OnLightCastInitiated;
         inputReader.heavyCastEvent += OnHeavyCastInitiated;
         inputReader.moveMouseEvent += OnMouseMoveInitiated;
+        inputReader.lightSpellScroll += OnLightSpellScrollInitiated;
+        inputReader.heavySpellScroll += OnHeavySpellScrollInitiated;
     }
 
     private void OnDisable()
@@ -29,6 +31,8 @@ public class PlayerController : MonoBehaviour
         inputReader.lightCastEvent -= OnLightCastInitiated;
         inputReader.heavyCastEvent -= OnHeavyCastInitiated;
         inputReader.moveMouseEvent -= OnMouseMoveInitiated;
+        inputReader.lightSpellScroll -= OnLightSpellScrollInitiated;
+        inputReader.heavySpellScroll -= OnHeavySpellScrollInitiated;
     }
 
     private void FixedUpdate()
@@ -79,5 +83,34 @@ public class PlayerController : MonoBehaviour
     public void OnMouseMoveInitiated(Vector2 mousePos)
     {
         fightingComponent.SetMousePos(mousePos);
+    }
+
+    public void OnLightSpellScrollInitiated(float sVal)
+    {
+        int offset = GetScrollOffset(sVal);
+
+        fightingComponent.LightSpellShift(offset);
+    }
+
+    public void OnHeavySpellScrollInitiated(float sVal)
+    {
+        int offset = GetScrollOffset(sVal);
+
+        fightingComponent.HeavySpellShift(offset);
+    }
+
+    private int GetScrollOffset(float sVal)
+    {
+        int offset = 0;
+        if (sVal > 0)
+        {
+            offset = 1;
+        }
+        else if (sVal < 0)
+        {
+            offset = -1;
+        }
+
+        return offset;
     }
 }
