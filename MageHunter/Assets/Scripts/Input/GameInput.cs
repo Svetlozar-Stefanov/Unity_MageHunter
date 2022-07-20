@@ -46,9 +46,18 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Shoot"",
+                    ""name"": ""LightSpell"",
                     ""type"": ""Button"",
                     ""id"": ""6777315c-0e00-406f-95c3-4468ff55e567"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HeavySpell"",
+                    ""type"": ""Button"",
+                    ""id"": ""1c0507b7-1037-43c9-9c7c-e345aa31c78f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -171,7 +180,18 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Shoot"",
+                    ""action"": ""LightSpell"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6e4162be-73a3-47e1-a8a6-d667a291fd07"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""HeavySpell"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -212,7 +232,8 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         m_InGame = asset.FindActionMap("InGame", throwIfNotFound: true);
         m_InGame_Move = m_InGame.FindAction("Move", throwIfNotFound: true);
         m_InGame_Jump = m_InGame.FindAction("Jump", throwIfNotFound: true);
-        m_InGame_Shoot = m_InGame.FindAction("Shoot", throwIfNotFound: true);
+        m_InGame_LightSpell = m_InGame.FindAction("LightSpell", throwIfNotFound: true);
+        m_InGame_HeavySpell = m_InGame.FindAction("HeavySpell", throwIfNotFound: true);
         m_InGame_MousePos = m_InGame.FindAction("MousePos", throwIfNotFound: true);
     }
 
@@ -275,7 +296,8 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     private IInGameActions m_InGameActionsCallbackInterface;
     private readonly InputAction m_InGame_Move;
     private readonly InputAction m_InGame_Jump;
-    private readonly InputAction m_InGame_Shoot;
+    private readonly InputAction m_InGame_LightSpell;
+    private readonly InputAction m_InGame_HeavySpell;
     private readonly InputAction m_InGame_MousePos;
     public struct InGameActions
     {
@@ -283,7 +305,8 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         public InGameActions(@GameInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_InGame_Move;
         public InputAction @Jump => m_Wrapper.m_InGame_Jump;
-        public InputAction @Shoot => m_Wrapper.m_InGame_Shoot;
+        public InputAction @LightSpell => m_Wrapper.m_InGame_LightSpell;
+        public InputAction @HeavySpell => m_Wrapper.m_InGame_HeavySpell;
         public InputAction @MousePos => m_Wrapper.m_InGame_MousePos;
         public InputActionMap Get() { return m_Wrapper.m_InGame; }
         public void Enable() { Get().Enable(); }
@@ -300,9 +323,12 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnJump;
-                @Shoot.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnShoot;
-                @Shoot.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnShoot;
-                @Shoot.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnShoot;
+                @LightSpell.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnLightSpell;
+                @LightSpell.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnLightSpell;
+                @LightSpell.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnLightSpell;
+                @HeavySpell.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnHeavySpell;
+                @HeavySpell.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnHeavySpell;
+                @HeavySpell.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnHeavySpell;
                 @MousePos.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnMousePos;
                 @MousePos.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnMousePos;
                 @MousePos.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnMousePos;
@@ -316,9 +342,12 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
-                @Shoot.started += instance.OnShoot;
-                @Shoot.performed += instance.OnShoot;
-                @Shoot.canceled += instance.OnShoot;
+                @LightSpell.started += instance.OnLightSpell;
+                @LightSpell.performed += instance.OnLightSpell;
+                @LightSpell.canceled += instance.OnLightSpell;
+                @HeavySpell.started += instance.OnHeavySpell;
+                @HeavySpell.performed += instance.OnHeavySpell;
+                @HeavySpell.canceled += instance.OnHeavySpell;
                 @MousePos.started += instance.OnMousePos;
                 @MousePos.performed += instance.OnMousePos;
                 @MousePos.canceled += instance.OnMousePos;
@@ -339,7 +368,8 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnShoot(InputAction.CallbackContext context);
+        void OnLightSpell(InputAction.CallbackContext context);
+        void OnHeavySpell(InputAction.CallbackContext context);
         void OnMousePos(InputAction.CallbackContext context);
     }
 }

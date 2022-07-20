@@ -9,7 +9,8 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
     public event UnityAction jumpEvent;
     public event UnityAction<float> moveEvent;
 
-	public event UnityAction shootEvent;
+	public event UnityAction lightCastEvent;
+	public event UnityAction heavyCastEvent;
 
 	public event UnityAction<Vector2> moveMouseEvent;
 
@@ -45,20 +46,28 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 			jumpEvent.Invoke();
 	}
 
-	public void OnShoot(InputAction.CallbackContext context)
-	{
-        if (shootEvent != null && context.phase == InputActionPhase.Performed)
-        {
-			shootEvent.Invoke();
-        }
-	}
-
 	public void OnMousePos(InputAction.CallbackContext context)
 	{
         if (moveMouseEvent != null)
         {
 			moveMouseEvent.Invoke(context.ReadValue<Vector2>());
         }
+	}
+
+	public void OnLightSpell(InputAction.CallbackContext context)
+	{
+		if (lightCastEvent != null && context.phase == InputActionPhase.Performed)
+		{
+			lightCastEvent.Invoke();
+		}
+	}
+
+	public void OnHeavySpell(InputAction.CallbackContext context)
+	{
+		if (heavyCastEvent != null && context.phase == InputActionPhase.Performed)
+		{
+			heavyCastEvent.Invoke();
+		}
 	}
 
 	public void EnableInGameInput()

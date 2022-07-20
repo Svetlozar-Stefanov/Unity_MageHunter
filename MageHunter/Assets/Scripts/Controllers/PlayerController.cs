@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private InputReader inputReader;
-    [SerializeField] private MovementComponent movementController;
+    [SerializeField] private MovementComponent movementComponent;
     [SerializeField] private FightingComponent fightingComponent;
     [SerializeField] private AnimatorComponent animatorComponent;
 
@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour
     {
         inputReader.moveEvent += OnMoveInitiated;
         inputReader.jumpEvent += OnJumpInitiated;
-        inputReader.shootEvent += OnShootInitiated;
+        inputReader.lightCastEvent += OnLightCastInitiated;
+        inputReader.heavyCastEvent += OnHeavyCastInitiated;
         inputReader.moveMouseEvent += OnMouseMoveInitiated;
     }
 
@@ -25,13 +26,14 @@ public class PlayerController : MonoBehaviour
     {
         inputReader.moveEvent -= OnMoveInitiated;
         inputReader.jumpEvent -= OnJumpInitiated;
-        inputReader.shootEvent -= OnShootInitiated;
+        inputReader.lightCastEvent -= OnLightCastInitiated;
+        inputReader.heavyCastEvent -= OnHeavyCastInitiated;
         inputReader.moveMouseEvent -= OnMouseMoveInitiated;
     }
 
     private void FixedUpdate()
     {
-        movementController.Move(direction);
+        movementComponent.Move(direction);
         if (direction != 0)
         {
             animatorComponent.IsMoving(false);
@@ -43,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
         if (startJump)
         {
-            movementController.Jump();
+            movementComponent.Jump();
             startJump = false;
         }
     }
@@ -64,9 +66,14 @@ public class PlayerController : MonoBehaviour
         animatorComponent.IsJumping(true);
     }
 
-    public void OnShootInitiated()
+    public void OnLightCastInitiated()
     {
-        fightingComponent.SpawnProjectile();
+        fightingComponent.CastLightSpell();
+    }
+
+    public void OnHeavyCastInitiated()
+    {
+        fightingComponent.CastHeavySpell();
     }
 
     public void OnMouseMoveInitiated(Vector2 mousePos)

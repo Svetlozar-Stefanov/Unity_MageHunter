@@ -24,9 +24,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Shoot",
+                    "name": "LightSpell",
                     "type": "Button",
                     "id": "6777315c-0e00-406f-95c3-4468ff55e567",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "HeavySpell",
+                    "type": "Button",
+                    "id": "1c0507b7-1037-43c9-9c7c-e345aa31c78f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -149,7 +158,18 @@
                     "interactions": "Press",
                     "processors": "",
                     "groups": "Keyboard and Mouse",
-                    "action": "Shoot",
+                    "action": "LightSpell",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6e4162be-73a3-47e1-a8a6-d667a291fd07",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "HeavySpell",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

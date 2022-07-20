@@ -1,23 +1,28 @@
 using Assets.Scripts.Controllers;
 using UnityEngine;
 
-public class BaseProjectile : MonoBehaviour
+public class BaseSpell : MonoBehaviour
 {
     [SerializeField] private float speed = 40.0f;
     [SerializeField] private float damage = 10.0f;
+    [SerializeField] public float cooldown = 10;
 
+    [SerializeField] private bool hasLifespan = true;
     [SerializeField] private float lifespan = 5.0f;
+
     [SerializeField] private Rigidbody2D rb2d;
 
-    void Start()
+    public virtual void Use()
     {
-        rb2d.velocity = transform.right * speed;
-        //rb2d.AddForce(new Vector2(speed, 0), ForceMode2D.Impulse);
+        if (hasLifespan)
+        {
+            Destroy(gameObject, lifespan);
+        }
 
-        Destroy(gameObject, lifespan);
+        rb2d.velocity = transform.right * speed;
     }
 
-    public void OnTriggerEnter2D(Collider2D other)
+    public virtual void OnTriggerEnter2D(Collider2D other)
     {
         IDamageableController<float> damageable = other.GetComponent<IDamageableController<float>>();
         if (damageable != null)

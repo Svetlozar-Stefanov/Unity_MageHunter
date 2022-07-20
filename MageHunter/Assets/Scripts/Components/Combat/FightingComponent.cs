@@ -10,32 +10,20 @@ public class FightingComponent : MonoBehaviour
     [SerializeField] private Transform aim;
 
     [Header("Specs")]
-    [SerializeField] private BaseProjectile projectile;
-    [SerializeField] private float cooldown = 10;
+    [SerializeField] private BaseSpellCaster lightSpellCaster;
+    [SerializeField] private BaseSpellCaster heavySpellCaster;
 
     private Vector3 mousePos;
-    private float timer = 0.0f;
-    private bool canFire = true;
 
     private void Update()
     {
         Vector3 worldMousePos = mainCamera.ScreenToWorldPoint(mousePos);
-         
+
         Vector3 rotation = worldMousePos - pivotPoint.position;
 
         float rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
 
         pivotPoint.rotation = Quaternion.Euler(0, 0, rotZ);
-
-        if (!canFire)
-        {
-            timer += 0.05f;
-            if (timer >= cooldown)
-            {
-                canFire = true;
-                timer = 0.0f;
-            }
-        }
     }
 
     public void SetMousePos(Vector2 mousePos)
@@ -43,13 +31,13 @@ public class FightingComponent : MonoBehaviour
         this.mousePos = mousePos;
     }
 
-    public void SpawnProjectile()
+    public void CastLightSpell()
     {
-        if (canFire)
-        {
-            canFire = false;
+        lightSpellCaster.Cast(aim.position, aim.rotation);
+    }
 
-            Instantiate(projectile, aim.position, aim.rotation);
-        }
+    public void CastHeavySpell()
+    {
+        heavySpellCaster.Cast(aim.position, aim.rotation);
     }
 }
