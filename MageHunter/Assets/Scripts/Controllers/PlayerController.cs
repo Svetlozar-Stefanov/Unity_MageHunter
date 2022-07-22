@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     private float direction = 0.0f;
     private bool startJump = false;
 
+    public FightingComponent FightingComponent { get => fightingComponent; }
+
     private void OnEnable()
     {
         inputReader.moveEvent += OnMoveInitiated;
@@ -85,6 +87,11 @@ public class PlayerController : MonoBehaviour
     public void OnMouseMoveInitiated(Vector2 mousePos)
     {
         fightingComponent.SetMousePos(mousePos);
+    }
+
+    public bool IsChangingSpellSelector()
+    {
+        return inputReader.isChangingSpellSelector;
     }
 
     public void OnLightSpellScrollInitiated(float sVal)

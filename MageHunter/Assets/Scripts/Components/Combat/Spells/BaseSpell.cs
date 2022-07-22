@@ -3,14 +3,27 @@ using UnityEngine;
 
 public class BaseSpell : MonoBehaviour
 {
-    [SerializeField] private float speed = 40.0f;
-    [SerializeField] private float damage = 10.0f;
-    [SerializeField] public float cooldown = 10;
-
-    [SerializeField] private bool hasLifespan = true;
-    [SerializeField] private float lifespan = 5.0f;
-
     [SerializeField] private Rigidbody2D rb2d;
+    [SerializeField] private SpellContainer spellData;
+
+    public SpellContainer SpellData { get => spellData; }
+
+    private float speed;
+    private float damage;
+    private float cooldown;
+    private bool hasLifespan;
+    private float lifespan;
+
+    public float Cooldown { get => cooldown; }
+
+    private void Awake()
+    {
+        speed = spellData.speed;
+        damage = spellData.damage;
+        cooldown = spellData.cooldown;
+        hasLifespan = spellData.hasLifespan;
+        lifespan = spellData.lifespan;
+    }
 
     public virtual void Use()
     {

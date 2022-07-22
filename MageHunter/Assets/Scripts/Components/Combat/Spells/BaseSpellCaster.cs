@@ -6,6 +6,8 @@ public class BaseSpellCaster : MonoBehaviour
 {
     [SerializeField] private BaseSpell spell;
 
+    public BaseSpell Spell { get => spell; }
+
     private float timer = 0.0f;
     private bool canUse = true;
 
@@ -14,7 +16,7 @@ public class BaseSpellCaster : MonoBehaviour
         if (!canUse)
         {
             timer += 0.05f;
-            if (timer >= spell.cooldown)
+            if (timer >= spell.Cooldown)
             {
                 canUse = true;
                 timer = 0.0f;

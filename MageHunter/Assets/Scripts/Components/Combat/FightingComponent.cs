@@ -16,12 +16,15 @@ public class FightingComponent : MonoBehaviour
     [SerializeField] private BaseSpellCaster[] lightSpells;
     [SerializeField] private BaseSpellCaster[] heavySpells;
 
-    public int lightIdx = 0;
-    public int heavyIdx = 0;
+    private int lightIdx = 0;
+    private int heavyIdx = 0;
     private BaseSpellCaster lightSpellCaster;
     private BaseSpellCaster heavySpellCaster;
 
     private Vector3 mousePos;
+
+    public SpellContainer CurrentLightSpell { get => lightSpellCaster.Spell.SpellData; }
+    public SpellContainer CurrentHeavySpell { get => heavySpellCaster.Spell.SpellData; }
 
     private void Awake()
     {

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8284305058253765095}
   - component: {fileID: 5829059893410336696}
   m_Layer: 0
-  m_Name: LightSpell 2
+  m_Name: Light_Spell_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.064257726, g: 0.51427203, b: 0.7169812, a: 1}
+  m_Color: {r: 0.33134568, g: 0.76555073, b: 0.9622642, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -136,9 +136,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b650770ea75e3e5439221ab00188cae3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 25
-  damage: 20
-  cooldown: 20
-  hasLifespan: 1
-  lifespan: 5
   rb2d: {fileID: 8284305058253765095}
+  spellData: {fileID: 11400000, guid: 8d5f692db1f60a3468953d4c70285a79, type: 2}

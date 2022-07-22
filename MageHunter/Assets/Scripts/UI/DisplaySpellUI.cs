@@ -5,29 +5,28 @@ using UnityEngine.UI;
 
 public class DisplaySpellUI : MonoBehaviour
 {
-    public Image back1;
-    public Image back2;
+    public Image lightSpellBackPanel;
+    public Image heavySpellBackPanel;
 
-    public Text s1;
-    public Text s2;
+    public Image lightSpell;
+    public Image heavySpell;
 
-    public FightingComponent playerSpells;
-    public InputReader input;
+    public PlayerController playerController;
 
     void Update()
     {
-        if (input.isPressedQ)
+        if (playerController.IsChangingSpellSelector())
         {
-            back1.color = Color.white;
-            back2.color = Color.yellow;
+            lightSpellBackPanel.color = Color.white;
+            heavySpellBackPanel.color = Color.yellow;
         }
-        if (!input.isPressedQ)
+        if (!playerController.IsChangingSpellSelector())
         {
-            back1.color = Color.yellow;
-            back2.color = Color.white;
+            lightSpellBackPanel.color = Color.yellow;
+            heavySpellBackPanel.color = Color.white;
         }
 
-        s1.text = playerSpells.lightIdx.ToString();
-        s2.text = playerSpells.heavyIdx.ToString();
+        lightSpell.sprite = playerController.FightingComponent.CurrentLightSpell.image;
+        heavySpell.sprite = playerController.FightingComponent.CurrentHeavySpell.image;
     }
 }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8284305058253765095}
   - component: {fileID: 5829059893410336696}
   m_Layer: 0
-  m_Name: Heav Spell 2
+  m_Name: Heavy_Spell_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -136,9 +136,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b650770ea75e3e5439221ab00188cae3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  damage: 50
-  cooldown: 500
-  hasLifespan: 1
-  lifespan: 5
   rb2d: {fileID: 8284305058253765095}
+  spellData: {fileID: 11400000, guid: 2eb72514816307d4380ecc96e8c1df52, type: 2}

@@ -39,11 +39,6 @@ public class MovementComponent : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         GroundCheckCalc();

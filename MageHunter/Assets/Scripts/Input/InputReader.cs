@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-[CreateAssetMenu(fileName = "InputReader", menuName = "Game/Input Reader")]
+[CreateAssetMenu(fileName = "InputReader", menuName = "Game/IO/Input Reader")]
 public class InputReader : ScriptableObject, GameInput.IInGameActions
 {
     //Gameplay
@@ -19,7 +19,7 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 
     private GameInput gameInput;
 
-	public bool isPressedQ = false;
+	public bool isChangingSpellSelector = false;
 
 	private void OnEnable()
 	{
@@ -77,7 +77,7 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 
 	public void OnLightSpellScroll(InputAction.CallbackContext context)
 	{
-        if (lightSpellScroll != null && context.phase == InputActionPhase.Performed && !isPressedQ)
+        if (lightSpellScroll != null && context.phase == InputActionPhase.Performed && !isChangingSpellSelector)
         {
 			lightSpellScroll.Invoke(context.ReadValue<float>());
         }
@@ -85,7 +85,7 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 
 	public void OnHeavySpellScroll(InputAction.CallbackContext context)
 	{
-		if (heavySpellScroll != null && context.phase == InputActionPhase.Performed && isPressedQ)
+		if (heavySpellScroll != null && context.phase == InputActionPhase.Performed && isChangingSpellSelector)
 		{
 			heavySpellScroll.Invoke(context.ReadValue<float>());
 		}
@@ -95,11 +95,11 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 	{
 		if (context.phase == InputActionPhase.Performed)
 		{
-			isPressedQ = true;
+			isChangingSpellSelector = true;
 		}
         if (context.phase == InputActionPhase.Canceled)
         {
-			isPressedQ = false;
+			isChangingSpellSelector = false;
         }
 	}
 
