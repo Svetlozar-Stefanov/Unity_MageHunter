@@ -40,11 +40,11 @@ public class PlayerController : MonoBehaviour
         movementComponent.Move(direction);
         if (direction != 0)
         {
-            animatorComponent.IsMoving(false);
+            animatorComponent.IsMoving(true);
         }
         else
         {
-            animatorComponent.IsMoving(true);
+            animatorComponent.IsMoving(false);
         }
 
         if (startJump)
@@ -52,6 +52,8 @@ public class PlayerController : MonoBehaviour
             movementComponent.Jump();
             startJump = false;
         }
+
+        animatorComponent.IsFalling(movementComponent.IsFalling);
     }
 
     public void OnLanding()

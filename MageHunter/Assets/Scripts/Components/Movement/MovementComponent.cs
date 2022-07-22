@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -23,30 +24,31 @@ public class MovementComponent : MonoBehaviour
     private Rigidbody2D rb2d;
     private Vector3 currentVelocity = Vector3.zero;
     private bool facingRight = true;
-    private bool isGrounded;
+    private bool isGrounded = false;
+    private bool isFalling = false;
+
+    [HideInInspector]
+    public bool IsFalling
+    {
+        get { return isFalling; }
+    }
+
 
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
     }
 
+    private void Update()
+    {
+        
+    }
+
     private void FixedUpdate()
     {
-        bool wasGrounded = isGrounded;
-        isGrounded = false;
+        GroundCheckCalc();
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, GROUNDED_RADIUS, whatIsGround);
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            if (colliders[i].gameObject != gameObject)
-            {
-                isGrounded = true;
-                if (!wasGrounded)
-                {
-                    onLandEvent.Invoke();
-                }
-            }
-        }
+        IsFallingCalc();
     }
 
     public void Move(float direction)
@@ -84,5 +86,36 @@ public class MovementComponent : MonoBehaviour
     {
         facingRight = !facingRight;
         transform.Rotate(0.0f, 180.0f, 0.0f);
+    }
+
+    private void GroundCheckCalc()
+    {
+        bool wasGrounded = isGrounded;
+        isGrounded = false;
+
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, GROUNDED_RADIUS, whatIsGround);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject != gameObject)
+            {
+                isGrounded = true;
+                if (!wasGrounded)
+                {
+                    onLandEvent.Invoke();
+                }
+            }
+        }
+    }
+
+    private void IsFallingCalc()
+    {
+        if (rb2d.velocity.y < -0.1)
+        {
+            isFalling = true;
+        }
+        else
+        {
+            isFalling = false;
+        }
     }
 }

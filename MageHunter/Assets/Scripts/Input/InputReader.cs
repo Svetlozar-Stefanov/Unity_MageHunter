@@ -19,7 +19,7 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 
     private GameInput gameInput;
 
-	private bool isPressedQ = false;
+	public bool isPressedQ = false;
 
 	private void OnEnable()
 	{
@@ -77,7 +77,7 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 
 	public void OnLightSpellScroll(InputAction.CallbackContext context)
 	{
-        if (lightSpellScroll != null)
+        if (lightSpellScroll != null && context.phase == InputActionPhase.Performed && !isPressedQ)
         {
 			lightSpellScroll.Invoke(context.ReadValue<float>());
         }
@@ -85,7 +85,7 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 
 	public void OnHeavySpellScroll(InputAction.CallbackContext context)
 	{
-		if (heavySpellScroll != null && isPressedQ)
+		if (heavySpellScroll != null && context.phase == InputActionPhase.Performed && isPressedQ)
 		{
 			heavySpellScroll.Invoke(context.ReadValue<float>());
 		}

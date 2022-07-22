@@ -15,4 +15,9 @@ public class AnimatorComponent : MonoBehaviour
     {
         animator.SetBool("IsJumping", isJumping);
     }
+
+    public void IsFalling(bool isFalling)
+    {
+        animator.SetBool("IsFalling", isFalling);
+    }
 }

@@ -16,8 +16,8 @@ public class FightingComponent : MonoBehaviour
     [SerializeField] private BaseSpellCaster[] lightSpells;
     [SerializeField] private BaseSpellCaster[] heavySpells;
 
-    private int lightIdx = 0;
-    private int heavyIdx = 0;
+    public int lightIdx = 0;
+    public int heavyIdx = 0;
     private BaseSpellCaster lightSpellCaster;
     private BaseSpellCaster heavySpellCaster;
 
