@@ -10,11 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb801db94e2fef743898f16dfca9a771, type: 3}
-  m_Name: Heavy_Spell_1 1
+  m_Name: Light_Spell_1
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: 7c897c37470cbc24398b041b27d3f99e, type: 3}
+  prefab: {fileID: 4768909484186788735, guid: 8bd124802f03fa344afa633eb3d42ee3, type: 3}
+  type: 0
+  icon: {fileID: 21300000, guid: 20310425bf4249b4ab31678c0fa778b4, type: 3}
+  itemName: 
+  description: 
+  sellValue: 0
   speed: 40
   damage: 10
   cooldown: 10
+  manaCost: 5
   hasLifespan: 1
   lifespan: 5

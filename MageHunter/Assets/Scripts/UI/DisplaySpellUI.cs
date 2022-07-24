@@ -26,7 +26,7 @@ public class DisplaySpellUI : MonoBehaviour
             heavySpellBackPanel.color = Color.white;
         }
 
-        lightSpell.sprite = playerController.FightingComponent.CurrentLightSpell.image;
-        heavySpell.sprite = playerController.FightingComponent.CurrentHeavySpell.image;
+        lightSpell.sprite = playerController.FightingComponent.CurrentLightSpell.icon;
+        heavySpell.sprite = playerController.FightingComponent.CurrentHeavySpell.icon;
     }
 }

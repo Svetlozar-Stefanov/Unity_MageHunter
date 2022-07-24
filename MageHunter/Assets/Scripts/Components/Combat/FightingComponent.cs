@@ -15,24 +15,28 @@ public class FightingComponent : MonoBehaviour
     [SerializeField] private Transform aim;
 
     [Header("Specs")]
+    [SerializeField] private SpellBook spellBook;
+
     [SerializeField] private float maxMana;
 
-    [SerializeField] private BaseSpellCaster[] lightSpells;
-    [SerializeField] private BaseSpellCaster[] heavySpells;
+    private SpellCaster[] lightSpells;
+    private SpellCaster[] heavySpells;
 
     private float mana;
     private int lightIdx = 0;
     private int heavyIdx = 0;
-    private BaseSpellCaster lightSpellCaster;
-    private BaseSpellCaster heavySpellCaster;
+    private SpellCaster lightSpellCaster;
+    private SpellCaster heavySpellCaster;
 
     private Vector3 mousePos;
 
     public float MaxMana { get => maxMana; }
     public float Mana { get => mana; }
 
-    public SpellContainer CurrentLightSpell { get => lightSpellCaster.Spell.SpellData; }
-    public SpellContainer CurrentHeavySpell { get => heavySpellCaster.Spell.SpellData; }
+    public SpellBook SpellBook { get => spellBook; }
+
+    public SpellScroll CurrentLightSpell { get => lightSpellCaster.Spell.Data; }
+    public SpellScroll CurrentHeavySpell { get => heavySpellCaster.Spell.Data; }
 
     private void Awake()
     {
@@ -40,13 +44,21 @@ public class FightingComponent : MonoBehaviour
 
         if (lightSpells == null)
         {
-            lightSpells = new BaseSpellCaster[LIGHT_SPELL_COUNT];
-
+            lightSpells = new SpellCaster[LIGHT_SPELL_COUNT];
+            for (int i = 0; i < LIGHT_SPELL_COUNT; i++)
+            {
+                lightSpells[i] = gameObject.AddComponent<SpellCaster>();
+                lightSpells[i].Spell = spellBook.GetSpell(i);
+            }
         }
         if (heavySpells == null)
         {
-            heavySpells = new BaseSpellCaster[HEAVY_SPELL_COUNT];
-
+            heavySpells = new SpellCaster[HEAVY_SPELL_COUNT];
+            for (int i = 0; i < HEAVY_SPELL_COUNT; i++)
+            {
+                heavySpells[i] = gameObject.AddComponent<SpellCaster>();
+                heavySpells[i].Spell = spellBook.GetSpell(i + 3);
+            }
         }
 
         lightSpellCaster = lightSpells[lightIdx];
@@ -114,13 +126,13 @@ public class FightingComponent : MonoBehaviour
         pivotPoint.rotation = Quaternion.Euler(0, 0, rotZ);
     }
 
-    private void CastSpell(BaseSpellCaster spellCaster)
+    private void CastSpell(SpellCaster spellCaster)
     {
-        if (mana >= spellCaster.Spell.ManaCost)
+        if (mana >= spellCaster.Spell.Data.ManaCost)
         {
             if (spellCaster.Cast(aim.position, aim.rotation))
             {
-                mana -= spellCaster.Spell.ManaCost;
+                mana -= spellCaster.Spell.Data.ManaCost;
             }
             
         }

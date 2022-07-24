@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseSpellCaster : MonoBehaviour
+public class SpellCaster : MonoBehaviour
 {
-    [SerializeField] private BaseSpell spell;
+    [SerializeField] private Spell spell;
 
-    public BaseSpell Spell { get => spell; }
+    public Spell Spell { get => spell; set => spell = value; }
 
     private float timer = 0.0f;
     private bool canUse = true;
@@ -16,7 +16,7 @@ public class BaseSpellCaster : MonoBehaviour
         if (!canUse)
         {
             timer += 0.05f;
-            if (timer >= spell.Cooldown)
+            if (timer >= spell.Data.Cooldown)
             {
                 canUse = true;
                 timer = 0.0f;
@@ -31,7 +31,7 @@ public class BaseSpellCaster : MonoBehaviour
             return false;
         }
 
-        Instantiate(spell, sTransform, sRotation).Use();
+        Instantiate(spell, sTransform, sRotation).Cast();
 
         canUse = false;
 
