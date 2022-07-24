@@ -8,31 +8,21 @@ public class BaseSpell : MonoBehaviour
 
     public SpellContainer SpellData { get => spellData; }
 
-    private float speed;
-    private float damage;
-    private float cooldown;
-    private bool hasLifespan;
-    private float lifespan;
-
-    public float Cooldown { get => cooldown; }
-
-    private void Awake()
-    {
-        speed = spellData.speed;
-        damage = spellData.damage;
-        cooldown = spellData.cooldown;
-        hasLifespan = spellData.hasLifespan;
-        lifespan = spellData.lifespan;
-    }
+    public float Speed { get => spellData.speed; }
+    public float Damage { get => spellData.damage; }
+    public float Cooldown { get => spellData.cooldown; }
+    public bool HasLifespan { get => spellData.hasLifespan; }
+    public float Lifespan { get => spellData.lifespan; }
+    public float ManaCost { get => spellData.manaCost; }
 
     public virtual void Use()
     {
-        if (hasLifespan)
+        if (HasLifespan)
         {
-            Destroy(gameObject, lifespan);
+            Destroy(gameObject, Lifespan);
         }
 
-        rb2d.velocity = transform.right * speed;
+        rb2d.velocity = transform.right * Speed;
     }
 
     public virtual void OnTriggerEnter2D(Collider2D other)
@@ -40,7 +30,7 @@ public class BaseSpell : MonoBehaviour
         IDamageableController<float> damageable = other.GetComponent<IDamageableController<float>>();
         if (damageable != null)
         {
-            damageable.TakeDamage(damage);
+            damageable.TakeDamage(Damage);
             Destroy(gameObject);
         }
     }

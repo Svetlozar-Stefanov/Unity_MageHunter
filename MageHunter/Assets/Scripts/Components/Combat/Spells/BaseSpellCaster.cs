@@ -24,15 +24,17 @@ public class BaseSpellCaster : MonoBehaviour
         }
     }
 
-    public void Cast(Vector3 sTransform, Quaternion sRotation)
+    public bool Cast(Vector3 sTransform, Quaternion sRotation)
     {
         if (!canUse)
         {
-            return;
+            return false;
         }
 
         Instantiate(spell, sTransform, sRotation).Use();
 
         canUse = false;
+
+        return true;
     }
 }

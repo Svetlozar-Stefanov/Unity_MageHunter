@@ -7,15 +7,20 @@ public class FightingComponent : MonoBehaviour
     const int LIGHT_SPELL_COUNT = 3;
     const int HEAVY_SPELL_COUNT = 3;
 
+    const float MANA_REGEN = 0.01f;
+
     [Header("Setup")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Transform pivotPoint;
     [SerializeField] private Transform aim;
 
     [Header("Specs")]
+    [SerializeField] private float maxMana;
+
     [SerializeField] private BaseSpellCaster[] lightSpells;
     [SerializeField] private BaseSpellCaster[] heavySpells;
 
+    private float mana;
     private int lightIdx = 0;
     private int heavyIdx = 0;
     private BaseSpellCaster lightSpellCaster;
@@ -23,11 +28,16 @@ public class FightingComponent : MonoBehaviour
 
     private Vector3 mousePos;
 
+    public float MaxMana { get => maxMana; }
+    public float Mana { get => mana; }
+
     public SpellContainer CurrentLightSpell { get => lightSpellCaster.Spell.SpellData; }
     public SpellContainer CurrentHeavySpell { get => heavySpellCaster.Spell.SpellData; }
 
     private void Awake()
     {
+        mana = maxMana;
+
         if (lightSpells == null)
         {
             lightSpells = new BaseSpellCaster[LIGHT_SPELL_COUNT];
@@ -45,13 +55,9 @@ public class FightingComponent : MonoBehaviour
 
     private void Update()
     {
-        Vector3 worldMousePos = mainCamera.ScreenToWorldPoint(mousePos);
+        OrientAim();
 
-        Vector3 rotation = worldMousePos - pivotPoint.position;
-
-        float rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
-
-        pivotPoint.rotation = Quaternion.Euler(0, 0, rotZ);
+        ManaRegen();
     }
 
     public void SetMousePos(Vector2 mousePos)
@@ -61,12 +67,12 @@ public class FightingComponent : MonoBehaviour
 
     public void CastLightSpell()
     {
-        lightSpellCaster.Cast(aim.position, aim.rotation);
+        CastSpell(lightSpellCaster);
     }
 
     public void CastHeavySpell()
     {
-        heavySpellCaster.Cast(aim.position, aim.rotation);
+        CastSpell(heavySpellCaster);
     }
 
     public void LightSpellShift(int offset)
@@ -95,5 +101,40 @@ public class FightingComponent : MonoBehaviour
         }
 
         return old;
+    }
+
+    private void OrientAim()
+    {
+        Vector3 worldMousePos = mainCamera.ScreenToWorldPoint(mousePos);
+
+        Vector3 rotation = worldMousePos - pivotPoint.position;
+
+        float rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+
+        pivotPoint.rotation = Quaternion.Euler(0, 0, rotZ);
+    }
+
+    private void CastSpell(BaseSpellCaster spellCaster)
+    {
+        if (mana >= spellCaster.Spell.ManaCost)
+        {
+            if (spellCaster.Cast(aim.position, aim.rotation))
+            {
+                mana -= spellCaster.Spell.ManaCost;
+            }
+            
+        }
+    }
+
+    private void ManaRegen()
+    {
+        if (mana < maxMana)
+        {
+            mana += MANA_REGEN;
+        }
+        if (mana > maxMana)
+        {
+            mana = maxMana;
+        }
     }
 }
