@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpellBook : MonoBehaviour
+[CreateAssetMenu(fileName = "New SpellBook", menuName = "Game/SpellBook")]
+public class SpellBook : ScriptableObject
 {
     public List<Spell> spells;
 
@@ -10,8 +11,7 @@ public class SpellBook : MonoBehaviour
     {
         if (!Contains(spellScroll))
         {
-            Spell spell = new Spell();
-            spell.Data = spellScroll;
+            Spell spell = new Spell(spellScroll);
             spells.Add(spell);
             return true;
         }

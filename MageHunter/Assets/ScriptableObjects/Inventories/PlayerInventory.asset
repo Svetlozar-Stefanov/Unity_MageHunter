@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb801db94e2fef743898f16dfca9a771, type: 3}
-  m_Name: Light_Spell_3
+  m_Script: {fileID: 11500000, guid: 237020443fad69f43a2bb6da2d11cb2e, type: 3}
+  m_Name: PlayerInventory
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: bf8745021c78c8245aad265997cc0c51, type: 3}
-  speed: 40
-  damage: 10
-  cooldown: 10
-  hasLifespan: 1
-  lifespan: 5
+  items:
+  - item: {fileID: 11400000, guid: 28d3d6f2dbce5e648aa33de975a3de2b, type: 2}
+    amount: 4

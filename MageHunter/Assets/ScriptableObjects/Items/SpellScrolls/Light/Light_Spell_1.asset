@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Light_Spell_1
   m_EditorClassIdentifier: 
   prefab: {fileID: 4768909484186788735, guid: 8bd124802f03fa344afa633eb3d42ee3, type: 3}
-  type: 0
+  type: 1
   icon: {fileID: 21300000, guid: 20310425bf4249b4ab31678c0fa778b4, type: 3}
   itemName: 
   description: 

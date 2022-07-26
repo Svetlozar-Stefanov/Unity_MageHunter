@@ -5,6 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Spell", menuName = "Game/Items/SpellScroll")]
 public class SpellScroll : BaseItem
 {
+    public SpellScroll()
+    {
+        type = ItemType.SpellScroll;
+    }
+
     [Header("Specs")]
     [SerializeField] private float speed = 40.0f;
     [SerializeField] private float damage = 10.0f;

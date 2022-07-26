@@ -6,7 +6,12 @@ public class Spell : MonoBehaviour
     [SerializeField] private SpellScroll spell;
     [SerializeField] private Rigidbody2D rb2d;
 
-    public SpellScroll Data { get => spell; set => spell = value; }
+    public SpellScroll Data { get => spell; }
+
+    public Spell(SpellScroll data)
+    {
+        spell = data;
+    }
 
     private void Awake()
     {
@@ -14,7 +19,6 @@ public class Spell : MonoBehaviour
         visuals.transform.SetParent(this.transform);
         visuals.transform.localPosition = Vector3.zero;
         visuals.transform.rotation = Quaternion.identity;
-
     }
 
     public void Cast()

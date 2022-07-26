@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public enum ItemType
 {
-    Item,
+    MiscItem,
     SpellScroll
 }
 
