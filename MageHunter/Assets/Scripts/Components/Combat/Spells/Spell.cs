@@ -16,23 +16,19 @@ public class Spell : MonoBehaviour
     private void Awake()
     {
         GameObject prefabGameObj = Instantiate(spell.prefab);
+        //gameObject.transform.localScale = prefabGameObj.transform.localScale;
         prefabGameObj.transform.SetParent(this.transform);
         prefabGameObj.transform.localPosition = Vector3.zero;
         prefabGameObj.transform.rotation = Quaternion.identity;
 
-
-        //To add when creating non-test spells
+        //TO ADD WHEN ADDING NON-TEST SPELLS
         //CircleCollider2D collider2D = this.gameObject.AddComponent<CircleCollider2D>();
         //CircleCollider2D prefabCollider2D = prefabGameObj.GetComponent<CircleCollider2D>();
 
-        //collider2D.isTrigger = prefabCollider2D.isTrigger;
+        //collider2D.isTrigger = true;
+
         //collider2D.offset = prefabCollider2D.offset;
         //collider2D.radius = prefabCollider2D.radius;
-
-        //Rigidbody2D rb2d = this.gameObject.AddComponent<Rigidbody2D>();
-        //Rigidbody2D prefabRb2d = prefabGameObj.GetComponent<Rigidbody2D>();
-
-        //rb2d.bodyType = prefabRb2d.bodyType;
     }
 
     public void Cast()
