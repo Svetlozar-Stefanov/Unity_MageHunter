@@ -7,6 +7,12 @@ public class ItemComponent : MonoBehaviour
     [SerializeField] private BaseItem item;
     [SerializeField] private int amount;
 
+    public ItemComponent(BaseItem item, int amount)
+    {
+        this.item = item;
+        this.amount = amount;
+    }
+
     public BaseItem Item { get => item; set => item = value; }
     public int Amount { get => amount; set => amount = value; }
 

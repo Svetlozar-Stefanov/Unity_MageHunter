@@ -41,7 +41,6 @@ public class FightingComponent : MonoBehaviour
     private void Awake()
     {
         mana = maxMana;
-
         if (lightSpells == null)
         {
             lightSpells = new SpellCaster[LIGHT_SPELL_COUNT];
