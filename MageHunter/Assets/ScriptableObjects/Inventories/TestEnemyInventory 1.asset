@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 237020443fad69f43a2bb6da2d11cb2e, type: 3}
   m_Name: TestEnemyInventory 1
   m_EditorClassIdentifier: 
+  capacity: 10
   items:
   - item: {fileID: 11400000, guid: d907bb840106ec141865b94da8b7a31d, type: 2}
     amount: 1

@@ -5,13 +5,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Inventory", menuName = "Game/Inventory")]
 public class Inventory : ScriptableObject
 {
+    [SerializeField] private int capacity;
     [SerializeField] private List<InventorySlot> items = new List<InventorySlot>();
 
-    public List<InventorySlot> Items { get => items; } 
+    public List<InventorySlot> Items { get => items; }
+    public int Capacity { get => capacity; }
     
     public void AddItem(BaseItem item, int amount)
     {
-        if (amount <= 0)
+        if (amount <= 0 || items.Count >= capacity)
         {
             return;
         }
@@ -50,6 +52,7 @@ public class Inventory : ScriptableObject
         return null;
     }
 
+    //To be moved maybe
     public void RemoveItem(int index, int amount)
     {
         if (index < 0 || index >= items.Count)
@@ -65,6 +68,7 @@ public class Inventory : ScriptableObject
         }
     }
 
+    //To be moved maybe
     public InventorySlot DropItem(int index, int amount)
     {
         if (index < 0 || index >= items.Count)
