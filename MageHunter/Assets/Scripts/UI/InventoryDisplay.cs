@@ -7,16 +7,11 @@ public class InventoryDisplay : MonoBehaviour
 {
     [SerializeField] private Inventory inventory;
 
-    //[SerializeField] private int X_START;
-    //[SerializeField] private int Y_START;
-    //[SerializeField] private int X_ITEM_MARGIN;
-    //[SerializeField] private int Y_ITEM_MARGIN;
-    //[SerializeField] private int COLUMN_COUNT;
-
     [SerializeField] private RectTransform contentPanel;
     [SerializeField] private ItemUIDisplay itemUIPrefab;
 
     [SerializeField] private DescriptionUIDisplay descriptionUIDisplay;
+    [SerializeField] private DragableUIDisplay dragableUI;
 
     //private Dictionary<InventorySlot, GameObject> inventoryDisplay = new Dictionary<InventorySlot, GameObject>();
     private List<ItemUIDisplay> itemUIInstances = new List<ItemUIDisplay>();
@@ -24,6 +19,8 @@ public class InventoryDisplay : MonoBehaviour
     void Start()
     {
         CreateDisplay();
+        descriptionUIDisplay.ResetDescription();
+        dragableUI.Toggle(false);
     }
 
     void Update()
@@ -34,6 +31,8 @@ public class InventoryDisplay : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
+        descriptionUIDisplay.ResetDescription();
+        dragableUI.Toggle(false);
     }
 
     public void Hide()
@@ -69,7 +68,7 @@ public class InventoryDisplay : MonoBehaviour
 
     private void HandleEndDrag(ItemUIDisplay obj)
     {
-        
+        dragableUI.Toggle(false);
     }
 
     private void HandleSwap(ItemUIDisplay obj)
@@ -79,13 +78,14 @@ public class InventoryDisplay : MonoBehaviour
 
     private void HandleItemBeginDrag(ItemUIDisplay obj)
     {
-        
-    }
+        dragableUI.Toggle(true);
+        dragableUI.SetData(obj.itemGraphic.sprite, obj.amountText.text);
+    } 
 
     private void HandleItemSelection(ItemUIDisplay obj)
     {
         obj.Select();
-        descriptionUIDisplay.Set(inventory.Items[0].Item);
+        descriptionUIDisplay.Set(inventory.Items[0].Item.icon, inventory.Items[0].Item.name, inventory.Items[0].Item.description);
     }
 
     private void UpdateDisplay()
@@ -123,13 +123,9 @@ public class InventoryDisplay : MonoBehaviour
 
     private void SetupUIPrefab(InventorySlot item, int index)
     {
-        itemUIInstances[index].gameObject.GetComponent<ItemUIDisplay>().SetUp(item.Item.icon, item.Amount.ToString("n0"));
+        itemUIInstances[index].gameObject.GetComponent<ItemUIDisplay>()
+            .SetUp(item.Item.icon, item.Amount);
 
         //inventoryDisplay.Add(item, itemUIInstances[index]);
     }
-
-    //private Vector3 GetPosition(int i)
-    //{
-    //    return new Vector3(X_START + X_ITEM_MARGIN * (i % COLUMN_COUNT), Y_START + (-Y_ITEM_MARGIN * (i/COLUMN_COUNT)), 0);
-    //}
 }

@@ -37,11 +37,21 @@ public class ItemUIDisplay : MonoBehaviour
         empty = true;
     }
 
-    public void SetUp(Sprite graphic, string text)
+    public void SetUp(Sprite graphic, string amount)
     {
         itemGraphic.sprite = graphic;
-        amountText.text = text;
+        amountText.text = amount;
 
+        itemGraphic.gameObject.SetActive(true);
+        empty = false;
+    }
+
+    public void SetUp(Sprite graphic, int amount)
+    {
+        itemGraphic.sprite = graphic;
+        amountText.text = amount.ToString("n0");
+
+        itemGraphic.gameObject.SetActive(true);
         empty = false;
     }
 
