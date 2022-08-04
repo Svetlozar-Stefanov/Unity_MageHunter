@@ -5,27 +5,30 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Inventory", menuName = "Game/Inventory")]
 public class Inventory : ScriptableObject
 {
-    [SerializeField] private int capacity;
     [SerializeField] private List<InventorySlot> items = new List<InventorySlot>();
 
     private int index = 0;
 
     public List<InventorySlot> Items { get => items; }
-    public int Capacity { get => capacity; }
+    public int Capacity { get => items.Count; }
 
-    public int Length { get => index; }
+    public int Size { get => index; }
 
-    private void Awake()
+    public void SetUp()
     {
-        for (int i = 0; i < capacity; i++)
+        index = 0;
+        for (int i = 0; i < Capacity; i++)
         {
-            items.Add(null);
+            if (items[i].Item != null)
+            {
+                index++;
+            }
         }
     }
 
     public void AddItem(BaseItem item, int amount)
     {
-        if (amount <= 0 || index >= capacity)
+        if (amount <= 0 || index >= Capacity)
         {
             return;
         }
@@ -40,21 +43,9 @@ public class Inventory : ScriptableObject
         slot.AddAmount(amount);
     }
 
-    public bool Contains(BaseItem item)
-    {
-        for (int i = 0; i < items.Count; i++)
-        {
-            if (items[i].Item == item)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public InventorySlot GetItemSlot(BaseItem item)
     {
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < Capacity; i++)
         {
             if (items[i].Item == item)
             {
@@ -66,7 +57,7 @@ public class Inventory : ScriptableObject
 
     public void Swap(int i1, int i2)
     {
-        if (i1 >= items.Count || i2 >= items.Count)
+        if (i1 >= Capacity || i2 >= Capacity)
         {
             return;
         }
@@ -79,7 +70,7 @@ public class Inventory : ScriptableObject
     //To be moved maybe
     public void RemoveItem(int index, int amount)
     {
-        if (index < 0 || index >= items.Count)
+        if (index < 0 || index >= Capacity)
         {
             return;
         }
@@ -88,14 +79,14 @@ public class Inventory : ScriptableObject
         slot.RemoveAmount(amount);
         if (slot.Amount <= 0)
         {
-            items.RemoveAt(index);
+            items[index] = null;
         }
     }
 
     //To be moved maybe
     public InventorySlot DropItem(int index, int amount)
     {
-        if (index < 0 || index >= items.Count)
+        if (index < 0 || index >= Capacity)
         {
             return null;
         }
@@ -106,16 +97,18 @@ public class Inventory : ScriptableObject
         {
             return null;
         }
-        
-        InventorySlot itemToDrop = new InventorySlot(slot.Item, slot.Amount);
-        //RemoveItem(index, amount);
+
+        InventorySlot itemToDrop = new InventorySlot(slot.Item, amount);
 
         return itemToDrop;
     }
 
     public void Clear()
     {
-        items.Clear();
+        for (int i = 0; i < Capacity; i++)
+        {
+            items[i] = null;
+        }
     }
 }
 

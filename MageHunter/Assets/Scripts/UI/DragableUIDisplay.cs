@@ -38,11 +38,6 @@ public class DragableUIDisplay : MonoBehaviour
         item.SetUp(image, amount);
     }
 
-    public void SetData(Sprite image, string amount)
-    {
-        item.SetUp(image, amount);
-    }
-
     private void Update()
     {
         Vector2 position;

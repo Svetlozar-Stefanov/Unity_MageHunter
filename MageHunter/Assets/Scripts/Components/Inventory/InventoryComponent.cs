@@ -9,7 +9,12 @@ public class InventoryComponent : MonoBehaviour
 
     [SerializeField] private ItemComponent toDropItemPrefab;
 
-    public Inventory Inventory { get => inventory; } 
+    public Inventory Inventory { get => inventory; }
+
+    private void Start()
+    {
+        inventory.SetUp();
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     { 

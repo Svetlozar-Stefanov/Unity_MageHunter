@@ -24,9 +24,7 @@ public class InventoryDisplay : MonoBehaviour
         inputReader.closeInventoryEvent += Hide;
 
         CreateDisplay();
-        descriptionUIDisplay.ResetDescription();
         Hide();
-        dragableUI.Toggle(false);
     }
     void Update()
     {
@@ -36,14 +34,15 @@ public class InventoryDisplay : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
-        descriptionUIDisplay.ResetDescription();
-        dragableUI.Toggle(false);
+        ResetDragableUI();
+        ResetSelection();
     }
 
     public void Hide()
     {
         gameObject.SetActive(false);
-        dragableUI.Toggle(false);
+        ResetDragableUI();
+        ResetSelection();
     }
 
     private void CreateDisplay()
@@ -72,18 +71,31 @@ public class InventoryDisplay : MonoBehaviour
 
     }
 
+    private void HandleItemBeginDrag(ItemUIDisplay obj)
+    {
+        int index = itemUIInstances.IndexOf(obj);
+        if (index == -1)
+        {
+            return;
+        }
+        currentlyDraggedItemIndex = index;
+
+        InventorySlot slot = inventory.Items[index];
+
+        dragableUI.Toggle(true);
+        dragableUI.SetData(slot.Item.icon, slot.Amount);
+    }
+
     private void HandleEndDrag(ItemUIDisplay obj)
     {
-        dragableUI.Toggle(false);
+        ResetDragableUI();
     }
 
     private void HandleSwap(ItemUIDisplay obj)
     {
         int index = itemUIInstances.IndexOf(obj);
-        if (index == -1)
+        if (index == -1 || currentlyDraggedItemIndex == -1)
         {
-            dragableUI.Toggle(false);
-            currentlyDraggedItemIndex = -1;
             return;
         }
 
@@ -98,56 +110,54 @@ public class InventoryDisplay : MonoBehaviour
         dragableUI.Toggle(false);
     }
 
-    private void HandleItemBeginDrag(ItemUIDisplay obj)
+    private void HandleItemSelection(ItemUIDisplay obj)
     {
+        ResetSelection();
+        if (obj.Empty)
+        {
+            return;
+        }
+
+        obj.Select();
         int index = itemUIInstances.IndexOf(obj);
         if (index == -1)
         {
             return;
         }
-        currentlyDraggedItemIndex = index;
-
-        dragableUI.Toggle(true);
-        dragableUI.SetData(obj.itemGraphic.sprite, obj.amountText.text);
+        InventorySlot slot = inventory.Items[index];
+        descriptionUIDisplay.Set(slot.Item.icon, slot.Item.name, slot.Item.description);
     }
 
-    private void HandleItemSelection(ItemUIDisplay obj)
+    private void ResetSelection()
     {
-        obj.Select();
-        descriptionUIDisplay.Set(inventory.Items[0].Item.icon, inventory.Items[0].Item.name, inventory.Items[0].Item.description);
+        descriptionUIDisplay.ResetDescription();
+        DeselectAllItems();
+    }
+
+    private void DeselectAllItems()
+    {
+        foreach (var item in itemUIInstances)
+        {
+            item.Deselect();
+        }
     }
 
     private void UpdateDisplay()
     {
-        //for (int i = 0; i < inventory.Items.Count; i++)
-        //{
-        //    if (inventoryDisplay.ContainsKey(inventory.Items[i]))
-        //    {
-        //        int amount = inventory.Items[i].Amount;
-
-        //        inventoryDisplay[inventory.Items[i]].GetComponent<ItemUIDisplay>().SetText(amount.ToString("n0"));
-        //    }
-        //    else
-        //    {
-        //        SetupUIPrefab(inventory.Items[i], i);
-        //    }
-        //}
-        //if (inventoryDisplay.Keys.Count > inventory.Items.Count)
-        //{
-        //    List<InventorySlot> toDel = new List<InventorySlot>();
-        //    foreach (var key in inventoryDisplay.Keys)
-        //    {
-        //        if (!inventory.Items.Contains(key))
-        //        {
-        //            toDel.Add(key);
-        //        }
-        //    }
-        //    for (int i = 0; i < toDel.Count; i++)
-        //    {
-        //       Destroy(inventoryDisplay.GetValueOrDefault(toDel[i]).gameObject);
-        //        inventoryDisplay.Remove(toDel[i]);
-        //    }
-        //}
+        for (int i = 0; i < inventory.Capacity; i++)
+        {
+            if (inventory.Items[i].Item != null)
+            {
+                if (itemUIInstances[i].Empty)
+                {
+                    SetupUIPrefab(inventory.Items[i], i);
+                }
+                else
+                {
+                    itemUIInstances[i].SetAmount(inventory.Items[i].Amount);
+                }
+            }
+        }
     }
 
     private void SetupUIPrefab(InventorySlot item, int index)
@@ -160,5 +170,11 @@ public class InventoryDisplay : MonoBehaviour
         {
             itemUIInstances[index].ResetData();
         }
+    }
+
+    private void ResetDragableUI()
+    {
+        dragableUI.Toggle(false);
+        currentlyDraggedItemIndex = -1;
     }
 }

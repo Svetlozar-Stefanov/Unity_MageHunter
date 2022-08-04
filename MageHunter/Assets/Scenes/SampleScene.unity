@@ -1426,7 +1426,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7785528, y: 1}
+    m_SensorSize: {x: 1.7775947, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -2608,8 +2608,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39938d3f4d1be084f9d01202987713d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: {fileID: 11400000, guid: b68892429b2bdbc4d82cc7338e9eec0b, type: 2}
-  flushOnExit: 0
+  inventory: {fileID: 11400000, guid: 2d2a0a822d66f8f4eac8abcb5ed7a68b, type: 2}
+  flushOnExit: 1
   toDropItemPrefab: {fileID: 8879327903273841213, guid: 929e608da0f4c5f4ca90da978c14c3db, type: 3}
 --- !u!1 &1217307331
 GameObject:
@@ -3159,7 +3159,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2038952520}
   m_HandleRect: {fileID: 2038952519}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4467,7 +4467,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b5e954cb93a48c41acc8a8b8714c52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: {fileID: 11400000, guid: b68892429b2bdbc4d82cc7338e9eec0b, type: 2}
+  inputReader: {fileID: 11400000, guid: fa631b5a22509f44c85f8dff8f84e1c3, type: 2}
+  inventory: {fileID: 11400000, guid: 2d2a0a822d66f8f4eac8abcb5ed7a68b, type: 2}
   contentPanel: {fileID: 417693603}
   itemUIPrefab: {fileID: 8074285651141107801, guid: 94ec527c554a48b4089c052b81d3b502, type: 3}
   descriptionUIDisplay: {fileID: 1509746879}

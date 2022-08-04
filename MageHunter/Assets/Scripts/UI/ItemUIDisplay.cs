@@ -15,6 +15,8 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
 
     private bool empty = true;
 
+    public bool Empty { get => empty; }
+
     private void Awake()
     {
         ResetData();
@@ -37,15 +39,6 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         empty = true;
     }
 
-    public void SetUp(Sprite graphic, string amount)
-    {
-        itemGraphic.sprite = graphic;
-        amountText.text = amount;
-
-        itemGraphic.gameObject.SetActive(true);
-        empty = false;
-    }
-
     public void SetUp(Sprite graphic, int amount)
     {
         itemGraphic.sprite = graphic;
@@ -55,9 +48,9 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         empty = false;
     }
 
-    public void SetText(string text)
+    public void SetAmount(int amm)
     {
-        amountText.text = text;
+        amountText.text = amm.ToString("n0");
     }
 
     public void OnPointerClick(PointerEventData eventData)
