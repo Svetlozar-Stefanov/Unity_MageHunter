@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InventoryDisplay : MonoBehaviour
 {
+    [SerializeField] private InputReader inputReader;
     [SerializeField] private Inventory inventory;
 
     [SerializeField] private RectTransform contentPanel;
@@ -13,16 +15,19 @@ public class InventoryDisplay : MonoBehaviour
     [SerializeField] private DescriptionUIDisplay descriptionUIDisplay;
     [SerializeField] private DragableUIDisplay dragableUI;
 
-    //private Dictionary<InventorySlot, GameObject> inventoryDisplay = new Dictionary<InventorySlot, GameObject>();
     private List<ItemUIDisplay> itemUIInstances = new List<ItemUIDisplay>();
-     
+    private int currentlyDraggedItemIndex = -1;
+
     void Start()
     {
+        inputReader.openInventoryEvent += Show;
+        inputReader.closeInventoryEvent += Hide;
+
         CreateDisplay();
         descriptionUIDisplay.ResetDescription();
+        Hide();
         dragableUI.Toggle(false);
     }
-
     void Update()
     {
         UpdateDisplay();
@@ -38,6 +43,7 @@ public class InventoryDisplay : MonoBehaviour
     public void Hide()
     {
         gameObject.SetActive(false);
+        dragableUI.Toggle(false);
     }
 
     private void CreateDisplay()
@@ -45,7 +51,7 @@ public class InventoryDisplay : MonoBehaviour
         for (int i = 0; i < inventory.Capacity; i++)
         {
             ItemUIDisplay uiItem = Instantiate(itemUIPrefab, contentPanel.transform);
-            uiItem.transform.SetParent(contentPanel); 
+            uiItem.transform.SetParent(contentPanel);
             itemUIInstances.Add(uiItem);
 
             uiItem.OnItemClicked += HandleItemSelection;
@@ -55,7 +61,7 @@ public class InventoryDisplay : MonoBehaviour
             uiItem.OnRightMbtClicked += HandleShowItemActions;
         }
 
-        for (int i = 0; i < inventory.Items.Count; i++)
+        for (int i = 0; i < inventory.Capacity; i++)
         {
             SetupUIPrefab(inventory.Items[i], i);
         }
@@ -63,7 +69,7 @@ public class InventoryDisplay : MonoBehaviour
 
     private void HandleShowItemActions(ItemUIDisplay obj)
     {
-        
+
     }
 
     private void HandleEndDrag(ItemUIDisplay obj)
@@ -73,14 +79,37 @@ public class InventoryDisplay : MonoBehaviour
 
     private void HandleSwap(ItemUIDisplay obj)
     {
-        
+        int index = itemUIInstances.IndexOf(obj);
+        if (index == -1)
+        {
+            dragableUI.Toggle(false);
+            currentlyDraggedItemIndex = -1;
+            return;
+        }
+
+        InventorySlot dragged = inventory.Items[currentlyDraggedItemIndex];
+        InventorySlot toSwap = inventory.Items[index];
+
+        SetupUIPrefab(dragged, index);
+        SetupUIPrefab(toSwap, currentlyDraggedItemIndex);
+
+        inventory.Swap(index, currentlyDraggedItemIndex);
+
+        dragableUI.Toggle(false);
     }
 
     private void HandleItemBeginDrag(ItemUIDisplay obj)
     {
+        int index = itemUIInstances.IndexOf(obj);
+        if (index == -1)
+        {
+            return;
+        }
+        currentlyDraggedItemIndex = index;
+
         dragableUI.Toggle(true);
         dragableUI.SetData(obj.itemGraphic.sprite, obj.amountText.text);
-    } 
+    }
 
     private void HandleItemSelection(ItemUIDisplay obj)
     {
@@ -123,9 +152,13 @@ public class InventoryDisplay : MonoBehaviour
 
     private void SetupUIPrefab(InventorySlot item, int index)
     {
-        itemUIInstances[index].gameObject.GetComponent<ItemUIDisplay>()
-            .SetUp(item.Item.icon, item.Amount);
-
-        //inventoryDisplay.Add(item, itemUIInstances[index]);
+        if (item.Item != null)
+        {
+            itemUIInstances[index].SetUp(item.Item.icon, item.Amount);
+        }
+        else
+        {
+            itemUIInstances[index].ResetData();
+        }
     }
 }

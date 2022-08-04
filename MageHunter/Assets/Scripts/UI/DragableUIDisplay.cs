@@ -14,10 +14,18 @@ public class DragableUIDisplay : MonoBehaviour
 
     private void Awake()
     {
-        input.moveMouseEvent += OnMouseMove;
-
         canvas.transform.root.GetComponent<Canvas>();
         item.GetComponentInChildren<ItemUIDisplay>();
+    }
+
+    private void OnEnable()
+    {
+        input.inMenuMoveMouseEvent += OnMouseMove;
+    }
+
+    private void OnDisable()
+    {
+        input.inMenuMoveMouseEvent -= OnMouseMove;
     }
 
     private void OnMouseMove(Vector2 vector2)

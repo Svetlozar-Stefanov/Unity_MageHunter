@@ -3,7 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [CreateAssetMenu(fileName = "InputReader", menuName = "Game/IO/Input Reader")]
-public class InputReader : ScriptableObject, GameInput.IInGameActions
+public class InputReader : ScriptableObject, GameInput.IInGameActions, GameInput.IInGameMenusActions
 {
     //Gameplay
     public event UnityAction jumpEvent;
@@ -17,16 +17,24 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
 
 	public event UnityAction<Vector2> moveMouseEvent;
 
-    private GameInput gameInput;
+	//InGameMenus
+	public event UnityAction openInventoryEvent;
+	public event UnityAction closeInventoryEvent;
+	public event UnityAction<Vector2> inMenuMoveMouseEvent;
+
+
+	private GameInput gameInput;
+	private bool isOpen = false;
+
 
 	public bool isChangingSpellSelector = false;
-
 	private void OnEnable()
 	{
 		if (gameInput == null)
 		{
 			gameInput = new GameInput();
 			gameInput.InGame.SetCallbacks(this);
+			gameInput.InGameMenus.SetCallbacks(this);
 		}
 		EnableInGameInput();
 	}
@@ -103,13 +111,45 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions
         }
 	}
 
+	public void OnMenuMousePos(InputAction.CallbackContext context)
+	{
+		if (inMenuMoveMouseEvent != null)
+		{
+			inMenuMoveMouseEvent.Invoke(context.ReadValue<Vector2>());
+		}
+	}
+
+	public void OnOpenInventory(InputAction.CallbackContext context)
+	{
+        if (!isOpen && openInventoryEvent != null)
+        {
+			EnableInGameMenusInput();
+			isOpen = true;
+			openInventoryEvent.Invoke();
+        }
+        else if (isOpen && closeInventoryEvent != null)
+        {
+			EnableInGameInput();
+			isOpen = false;
+			closeInventoryEvent.Invoke();
+        }
+	}
+
 	public void EnableInGameInput()
 	{
 		gameInput.InGame.Enable();
+		gameInput.InGameMenus.Disable();
 	}
+
+	public void EnableInGameMenusInput()
+    {
+		gameInput.InGameMenus.Enable();
+		gameInput.InGame.Disable();
+    }
 
 	public void DisableAllInput()
 	{
 		gameInput.InGame.Disable();
+		gameInput.InGameMenus.Disable();
 	}
 }

@@ -98,6 +98,15 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""97226b97-d2e8-4d88-abf2-a94a8c63bd38"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -265,6 +274,65 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""action"": ""QPressed"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2d945ff-b8c3-4d5d-8357-9f851e23f005"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""OpenInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""InGameMenus"",
+            ""id"": ""d75a1b43-8623-4caf-a21a-28d2dc5ba429"",
+            ""actions"": [
+                {
+                    ""name"": ""OpenInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""2ba94d4e-bd5f-408b-a5e0-30675f11d9ea"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MenuMousePos"",
+                    ""type"": ""Value"",
+                    ""id"": ""f37e074b-b01e-47f9-a8aa-eebd081f47b3"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""ce1ce80f-c6b1-4d55-9c76-2bdfefd8d453"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""OpenInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8fffdd93-264c-4fcb-b906-0577f374b7f2"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""MenuMousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -298,6 +366,11 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         m_InGame_LightSpellScroll = m_InGame.FindAction("LightSpellScroll", throwIfNotFound: true);
         m_InGame_HeavySpellScroll = m_InGame.FindAction("HeavySpellScroll", throwIfNotFound: true);
         m_InGame_QPressed = m_InGame.FindAction("QPressed", throwIfNotFound: true);
+        m_InGame_OpenInventory = m_InGame.FindAction("OpenInventory", throwIfNotFound: true);
+        // InGameMenus
+        m_InGameMenus = asset.FindActionMap("InGameMenus", throwIfNotFound: true);
+        m_InGameMenus_OpenInventory = m_InGameMenus.FindAction("OpenInventory", throwIfNotFound: true);
+        m_InGameMenus_MenuMousePos = m_InGameMenus.FindAction("MenuMousePos", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -365,6 +438,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_InGame_LightSpellScroll;
     private readonly InputAction m_InGame_HeavySpellScroll;
     private readonly InputAction m_InGame_QPressed;
+    private readonly InputAction m_InGame_OpenInventory;
     public struct InGameActions
     {
         private @GameInput m_Wrapper;
@@ -377,6 +451,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         public InputAction @LightSpellScroll => m_Wrapper.m_InGame_LightSpellScroll;
         public InputAction @HeavySpellScroll => m_Wrapper.m_InGame_HeavySpellScroll;
         public InputAction @QPressed => m_Wrapper.m_InGame_QPressed;
+        public InputAction @OpenInventory => m_Wrapper.m_InGame_OpenInventory;
         public InputActionMap Get() { return m_Wrapper.m_InGame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -410,6 +485,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @QPressed.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnQPressed;
                 @QPressed.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnQPressed;
                 @QPressed.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnQPressed;
+                @OpenInventory.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnOpenInventory;
+                @OpenInventory.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnOpenInventory;
+                @OpenInventory.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnOpenInventory;
             }
             m_Wrapper.m_InGameActionsCallbackInterface = instance;
             if (instance != null)
@@ -438,10 +516,54 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @QPressed.started += instance.OnQPressed;
                 @QPressed.performed += instance.OnQPressed;
                 @QPressed.canceled += instance.OnQPressed;
+                @OpenInventory.started += instance.OnOpenInventory;
+                @OpenInventory.performed += instance.OnOpenInventory;
+                @OpenInventory.canceled += instance.OnOpenInventory;
             }
         }
     }
     public InGameActions @InGame => new InGameActions(this);
+
+    // InGameMenus
+    private readonly InputActionMap m_InGameMenus;
+    private IInGameMenusActions m_InGameMenusActionsCallbackInterface;
+    private readonly InputAction m_InGameMenus_OpenInventory;
+    private readonly InputAction m_InGameMenus_MenuMousePos;
+    public struct InGameMenusActions
+    {
+        private @GameInput m_Wrapper;
+        public InGameMenusActions(@GameInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @OpenInventory => m_Wrapper.m_InGameMenus_OpenInventory;
+        public InputAction @MenuMousePos => m_Wrapper.m_InGameMenus_MenuMousePos;
+        public InputActionMap Get() { return m_Wrapper.m_InGameMenus; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(InGameMenusActions set) { return set.Get(); }
+        public void SetCallbacks(IInGameMenusActions instance)
+        {
+            if (m_Wrapper.m_InGameMenusActionsCallbackInterface != null)
+            {
+                @OpenInventory.started -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnOpenInventory;
+                @OpenInventory.performed -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnOpenInventory;
+                @OpenInventory.canceled -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnOpenInventory;
+                @MenuMousePos.started -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnMenuMousePos;
+                @MenuMousePos.performed -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnMenuMousePos;
+                @MenuMousePos.canceled -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnMenuMousePos;
+            }
+            m_Wrapper.m_InGameMenusActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @OpenInventory.started += instance.OnOpenInventory;
+                @OpenInventory.performed += instance.OnOpenInventory;
+                @OpenInventory.canceled += instance.OnOpenInventory;
+                @MenuMousePos.started += instance.OnMenuMousePos;
+                @MenuMousePos.performed += instance.OnMenuMousePos;
+                @MenuMousePos.canceled += instance.OnMenuMousePos;
+            }
+        }
+    }
+    public InGameMenusActions @InGameMenus => new InGameMenusActions(this);
     private int m_KeyboardandMouseSchemeIndex = -1;
     public InputControlScheme KeyboardandMouseScheme
     {
@@ -461,5 +583,11 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         void OnLightSpellScroll(InputAction.CallbackContext context);
         void OnHeavySpellScroll(InputAction.CallbackContext context);
         void OnQPressed(InputAction.CallbackContext context);
+        void OnOpenInventory(InputAction.CallbackContext context);
+    }
+    public interface IInGameMenusActions
+    {
+        void OnOpenInventory(InputAction.CallbackContext context);
+        void OnMenuMousePos(InputAction.CallbackContext context);
     }
 }

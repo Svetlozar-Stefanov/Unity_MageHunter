@@ -8,12 +8,24 @@ public class Inventory : ScriptableObject
     [SerializeField] private int capacity;
     [SerializeField] private List<InventorySlot> items = new List<InventorySlot>();
 
+    private int index = 0;
+
     public List<InventorySlot> Items { get => items; }
     public int Capacity { get => capacity; }
-    
+
+    public int Length { get => index; }
+
+    private void Awake()
+    {
+        for (int i = 0; i < capacity; i++)
+        {
+            items.Add(null);
+        }
+    }
+
     public void AddItem(BaseItem item, int amount)
     {
-        if (amount <= 0 || items.Count >= capacity)
+        if (amount <= 0 || index >= capacity)
         {
             return;
         }
@@ -21,7 +33,7 @@ public class Inventory : ScriptableObject
         InventorySlot slot = GetItemSlot(item);
         if (slot == null)
         {
-            items.Add(new InventorySlot(item, amount));
+            items[index++] = new InventorySlot(item, amount);
             return;
         }
 
@@ -50,6 +62,18 @@ public class Inventory : ScriptableObject
             }
         }
         return null;
+    }
+
+    public void Swap(int i1, int i2)
+    {
+        if (i1 >= items.Count || i2 >= items.Count)
+        {
+            return;
+        }
+
+        var temp = items[i1];
+        items[i1] = items[i2];
+        items[i2] = temp;
     }
 
     //To be moved maybe
