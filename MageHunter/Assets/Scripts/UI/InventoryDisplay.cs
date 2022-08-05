@@ -57,7 +57,7 @@ public class InventoryDisplay : MonoBehaviour
             uiItem.OnItemBeginDrag += HandleItemBeginDrag;
             uiItem.OnItemDroppedOn += HandleSwap;
             uiItem.OnItemEndDrag += HandleEndDrag;
-            uiItem.OnRightMbtClicked += HandleShowItemActions;
+            uiItem.OnRightMbtClicked += HandleRightClick;
         }
 
         for (int i = 0; i < inventory.Capacity; i++)
@@ -66,9 +66,30 @@ public class InventoryDisplay : MonoBehaviour
         }
     }
 
-    private void HandleShowItemActions(ItemUIDisplay obj)
+    private void HandleRightClick(ItemUIDisplay obj)
     {
-
+        if (currentlyDraggedItemIndex != -1)
+        {
+            InventorySlot slot = inventory.Items[currentlyDraggedItemIndex];
+            if (!inventory.AddItemAt(slot.Item, 1, itemUIInstances.IndexOf(obj)))
+            {
+                return;
+            }
+            slot.RemoveAmount(1);
+            InventorySlot newSlot = inventory.Items[itemUIInstances.IndexOf(obj)];
+            obj.SetUp(newSlot.Item.icon, newSlot.Amount);
+            if (dragableUI.enabled)
+            {
+                dragableUI.SetData(slot.Item.icon, slot.Amount);
+            }
+            if (slot.Amount <= 0)
+            {
+                slot.Reset();
+                itemUIInstances[currentlyDraggedItemIndex].ResetData();
+                ResetDragableUI();
+                return;
+            }
+        }
     }
 
     private void HandleItemBeginDrag(ItemUIDisplay obj)
@@ -89,6 +110,7 @@ public class InventoryDisplay : MonoBehaviour
     private void HandleEndDrag(ItemUIDisplay obj)
     {
         ResetDragableUI();
+        ResetSelection();
     }
 
     private void HandleSwap(ItemUIDisplay obj)
@@ -101,13 +123,28 @@ public class InventoryDisplay : MonoBehaviour
 
         InventorySlot dragged = inventory.Items[currentlyDraggedItemIndex];
         InventorySlot toSwap = inventory.Items[index];
+        if (dragged == toSwap)
+        {
+            return;
+        }
 
-        SetupUIPrefab(dragged, index);
-        SetupUIPrefab(toSwap, currentlyDraggedItemIndex);
+        if (dragged.Item == toSwap.Item)
+        {
+            toSwap.AddAmount(dragged.Amount);
+            dragged.Reset();
 
-        inventory.Swap(index, currentlyDraggedItemIndex);
+            SetupUIPrefab(dragged, currentlyDraggedItemIndex);
+            SetupUIPrefab(toSwap, index);
+        }
+        else
+        {
+            inventory.Swap(index, currentlyDraggedItemIndex);
+            SetupUIPrefab(dragged, index);
+            SetupUIPrefab(toSwap, currentlyDraggedItemIndex);
+        }
 
-        dragableUI.Toggle(false);
+        ResetDragableUI();
+        ResetSelection();
     }
 
     private void HandleItemSelection(ItemUIDisplay obj)

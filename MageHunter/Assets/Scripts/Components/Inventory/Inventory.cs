@@ -8,6 +8,7 @@ public class Inventory : ScriptableObject
     [SerializeField] private List<InventorySlot> items = new List<InventorySlot>();
 
     private int index = 0;
+    private int size = 0;
 
     public List<InventorySlot> Items { get => items; }
     public int Capacity { get => items.Count; }
@@ -17,30 +18,53 @@ public class Inventory : ScriptableObject
     public void SetUp()
     {
         index = 0;
+        size = 0;
         for (int i = 0; i < Capacity; i++)
         {
             if (items[i].Item != null)
             {
-                index++;
+                size++;
             }
         }
     }
 
-    public void AddItem(BaseItem item, int amount)
+    public bool AddItem(BaseItem item, int amount)
     {
         if (amount <= 0 || index >= Capacity)
         {
-            return;
+            return false;
         }
 
         InventorySlot slot = GetItemSlot(item);
         if (slot == null)
         {
-            items[index++] = new InventorySlot(item, amount);
-            return;
+            while (index < Capacity && items[index].Item != null)
+            {
+                index++;
+            }
+            items[index] = new InventorySlot(item, amount);
+            return true;
         }
 
         slot.AddAmount(amount);
+        return true;
+    }
+
+    public bool AddItemAt(BaseItem item, int amount, int i)
+    {
+        if (amount <= 0 || i >= Capacity || (items[i].Item != null && items[i].Item != item))
+        {
+            return false;
+        }
+
+        InventorySlot slot = items[i];
+        if (slot.Item == null)
+        {
+            items[i] = new InventorySlot(item, amount);
+            return true;
+        }
+        slot.AddAmount(amount);
+        return true;
     }
 
     public InventorySlot GetItemSlot(BaseItem item)
@@ -67,21 +91,17 @@ public class Inventory : ScriptableObject
         items[i2] = temp;
     }
 
-    //To be moved maybe
-    public void RemoveItem(int index, int amount)
-    {
-        if (index < 0 || index >= Capacity)
-        {
-            return;
-        }
+    ////To be moved maybe
+    //public void RemoveItem(int index, int amount)
+    //{
+    //    if (index < 0 || index >= Capacity)
+    //    {
+    //        return;
+    //    }
 
-        InventorySlot slot = items[index];
-        slot.RemoveAmount(amount);
-        if (slot.Amount <= 0)
-        {
-            items[index] = null;
-        }
-    }
+    //    InventorySlot slot = items[index];
+    //    slot.RemoveAmount(amount);
+    //}
 
     //To be moved maybe
     public InventorySlot DropItem(int index, int amount)
@@ -140,5 +160,11 @@ public class InventorySlot
         }
 
         this.amount -= value;
+    }
+
+    public void Reset()
+    {
+        item = null;
+        amount = 0;
     }
 }

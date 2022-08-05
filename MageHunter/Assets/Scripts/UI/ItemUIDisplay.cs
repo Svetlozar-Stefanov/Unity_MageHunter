@@ -68,10 +68,12 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (empty)
+        PointerEventData pointer = (PointerEventData)eventData;
+        if (empty || pointer.button != PointerEventData.InputButton.Left)
         {
             return;
         }
+
         OnItemBeginDrag?.Invoke(this);
     }
 
@@ -81,6 +83,7 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         {
             return;
         }
+
         OnItemEndDrag?.Invoke(this);
     }
 
