@@ -10,17 +10,22 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     [SerializeField] public Image itemGraphic;
     [SerializeField] public TextMeshProUGUI amountText;
 
+    [SerializeField] private GameObject actionMenu;
+
     public event Action<ItemUIDisplay> OnItemClicked, OnItemDroppedOn,
-        OnItemBeginDrag, OnItemEndDrag, OnRightMbtClicked;
+        OnItemBeginDrag, OnItemEndDrag, OnRightMbtClicked, OnItemUsed, OnItemDroped;
 
     private bool empty = true;
+    private bool isInActionMenu = false;
 
     public bool Empty { get => empty; }
+    public bool IsInActionMenu { get => isInActionMenu; set => isInActionMenu = value; }
 
     private void Awake()
     {
         ResetData();
         Deselect();
+        CloseActionMenu();
     }
 
     public void Deselect()
@@ -53,6 +58,19 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         amountText.text = amm.ToString("n0");
     }
 
+    public void OpenActionMenu()
+    {
+        actionMenu.SetActive(true);
+        isInActionMenu = true;
+
+    }
+
+    public void CloseActionMenu()
+    {
+        actionMenu.SetActive(false);
+        isInActionMenu = false;
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         PointerEventData pointer = (PointerEventData)eventData;
@@ -60,7 +78,7 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         {
             OnRightMbtClicked?.Invoke(this);
         }
-        else
+        else if(!isInActionMenu)
         {
             OnItemClicked?.Invoke(this);
         }
@@ -69,7 +87,7 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     public void OnBeginDrag(PointerEventData eventData)
     {
         PointerEventData pointer = (PointerEventData)eventData;
-        if (empty || pointer.button != PointerEventData.InputButton.Left)
+        if (empty || isInActionMenu || pointer.button != PointerEventData.InputButton.Left)
         {
             return;
         }
@@ -79,11 +97,6 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (empty)
-        {
-            return;
-        }
-
         OnItemEndDrag?.Invoke(this);
     }
 
@@ -94,5 +107,21 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
 
     public void OnDrag(PointerEventData eventData)
     {
+    }
+
+    public void OnItemUse()
+    {
+        if (isInActionMenu)
+        {
+            OnItemUsed.Invoke(this);
+        }
+    }
+
+    public void OnItemDrop()
+    {
+        if (isInActionMenu)
+        {
+            OnItemDroped.Invoke(this);
+        }
     }
 }

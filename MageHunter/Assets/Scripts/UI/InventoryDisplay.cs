@@ -58,6 +58,8 @@ public class InventoryDisplay : MonoBehaviour
             uiItem.OnItemDroppedOn += HandleSwap;
             uiItem.OnItemEndDrag += HandleEndDrag;
             uiItem.OnRightMbtClicked += HandleRightClick;
+            uiItem.OnItemUsed += HandleItemUsed;
+            uiItem.OnItemDroped += HandleItemDropped;
         }
 
         for (int i = 0; i < inventory.Capacity; i++)
@@ -88,6 +90,17 @@ public class InventoryDisplay : MonoBehaviour
                 itemUIInstances[currentlyDraggedItemIndex].ResetData();
                 ResetDragableUI();
                 return;
+            }
+        }
+        else if(!obj.Empty)
+        {
+            if (!obj.IsInActionMenu)
+            {
+                obj.OpenActionMenu();
+            }
+            else if(obj.IsInActionMenu)
+            {
+                obj.CloseActionMenu();
             }
         }
     }
@@ -163,6 +176,16 @@ public class InventoryDisplay : MonoBehaviour
         }
         InventorySlot slot = inventory.Items[index];
         descriptionUIDisplay.Set(slot.Item.icon, slot.Item.name, slot.Item.description);
+    }
+
+    public void HandleItemUsed(ItemUIDisplay obj)
+    {
+        //TODO
+    }
+
+    public void HandleItemDropped(ItemUIDisplay obj)
+    {
+        //TODO
     }
 
     private void ResetSelection()
