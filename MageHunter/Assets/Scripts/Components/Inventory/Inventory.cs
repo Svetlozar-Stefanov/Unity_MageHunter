@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "New Inventory", menuName = "Game/Inventory")]
 public class Inventory : ScriptableObject
 {
     [SerializeField] private List<InventorySlot> items = new List<InventorySlot>();
+     public UnityAction<InventorySlot> onItemDrop;
 
     private int index = 0;
     private int size = 0;
@@ -91,36 +93,28 @@ public class Inventory : ScriptableObject
         items[i2] = temp;
     }
 
-    ////To be moved maybe
-    //public void RemoveItem(int index, int amount)
-    //{
-    //    if (index < 0 || index >= Capacity)
-    //    {
-    //        return;
-    //    }
-
-    //    InventorySlot slot = items[index];
-    //    slot.RemoveAmount(amount);
-    //}
-
-    //To be moved maybe
-    public InventorySlot DropItem(int index, int amount)
+    public bool DropItem(int index, int amount)
     {
         if (index < 0 || index >= Capacity)
         {
-            return null;
+            return false;
         }
 
         InventorySlot slot = items[index];
 
         if (amount > slot.Amount)
         {
-            return null;
+            return false;
+        }
+        InventorySlot itemToDrop = new InventorySlot(slot.Item, amount);
+        slot.RemoveAmount(amount);
+        if (slot.Amount <= 0)
+        {
+            slot.Reset();
         }
 
-        InventorySlot itemToDrop = new InventorySlot(slot.Item, amount);
-
-        return itemToDrop;
+        onItemDrop.Invoke(itemToDrop);
+        return true;
     }
 
     public void Clear()

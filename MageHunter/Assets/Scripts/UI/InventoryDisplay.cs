@@ -14,9 +14,12 @@ public class InventoryDisplay : MonoBehaviour
 
     [SerializeField] private DescriptionUIDisplay descriptionUIDisplay;
     [SerializeField] private DragableUIDisplay dragableUI;
+    [SerializeField] private GameObject dropMenu;
 
     private List<ItemUIDisplay> itemUIInstances = new List<ItemUIDisplay>();
     private int currentlyDraggedItemIndex = -1;
+    private bool isInDropMenu = false;
+    private int itemToDropIndex = -1;
 
     void Start()
     {
@@ -24,6 +27,7 @@ public class InventoryDisplay : MonoBehaviour
         inputReader.closeInventoryEvent += Hide;
 
         CreateDisplay();
+        dropMenu.SetActive(false);
         Hide();
     }
     void Update()
@@ -70,6 +74,10 @@ public class InventoryDisplay : MonoBehaviour
 
     private void HandleRightClick(ItemUIDisplay obj)
     {
+        if (isInDropMenu)
+        {
+            return;
+        }
         if (currentlyDraggedItemIndex != -1)
         {
             InventorySlot slot = inventory.Items[currentlyDraggedItemIndex];
@@ -107,6 +115,11 @@ public class InventoryDisplay : MonoBehaviour
 
     private void HandleItemBeginDrag(ItemUIDisplay obj)
     {
+        if (isInDropMenu)
+        {
+            return;
+        }
+
         int index = itemUIInstances.IndexOf(obj);
         if (index == -1)
         {
@@ -162,6 +175,11 @@ public class InventoryDisplay : MonoBehaviour
 
     private void HandleItemSelection(ItemUIDisplay obj)
     {
+        if (isInDropMenu)
+        {
+            return;
+        }
+
         ResetSelection();
         if (obj.Empty)
         {
@@ -180,12 +198,50 @@ public class InventoryDisplay : MonoBehaviour
 
     public void HandleItemUsed(ItemUIDisplay obj)
     {
-        //TODO
+        int index = itemUIInstances.IndexOf(obj);
+        BaseItem item = inventory.Items[index].Item;
+        if (item != null)
+        {
+            item.Use();
+        }
     }
 
     public void HandleItemDropped(ItemUIDisplay obj)
     {
-        //TODO
+        obj.CloseActionMenu();
+        dropMenu.SetActive(true);
+        int index = itemUIInstances.IndexOf(obj);
+        itemToDropIndex = index;
+        InventorySlot slot = inventory.Items[index];
+        dropMenu.GetComponent<DropMenuUIDisplay>().SetUp(slot.Amount);
+        isInDropMenu = true;
+        inputReader.DisableAllInput();
+    }
+
+    public void HandleOnDropCancel()
+    {
+        dropMenu.SetActive(false);
+        isInDropMenu = false;
+        itemToDropIndex = -1;
+        inputReader.EnableInGameMenusInput();
+    }
+
+    public void HandleOnDropAccept()
+    {
+        int amount = dropMenu.GetComponent<DropMenuUIDisplay>().GetValue();
+        if(inventory.DropItem(itemToDropIndex, amount))
+        {
+            if (inventory.Items[itemToDropIndex].Item == null)
+            {
+                itemUIInstances[itemToDropIndex].ResetData();
+            }
+            else
+            {
+                itemUIInstances[itemToDropIndex].SetAmount(inventory.Items[itemToDropIndex].Amount);
+            }
+        }
+
+        HandleOnDropCancel();
     }
 
     private void ResetSelection()

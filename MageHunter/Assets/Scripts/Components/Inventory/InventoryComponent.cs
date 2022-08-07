@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class InventoryComponent : MonoBehaviour
 {
+    private Vector3 DROP_OFFSET = new Vector3(0.8f,1,0);
+
     [SerializeField] private Inventory inventory;
     [SerializeField] private bool flushOnExit = true;
 
@@ -14,10 +16,11 @@ public class InventoryComponent : MonoBehaviour
     private void Start()
     {
         inventory.SetUp();
+        inventory.onItemDrop += OnDropItem;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
-    { 
+    {
         var itemComponent = other.GetComponent<ItemComponent>();
         if (itemComponent != null)
         {
@@ -25,20 +28,19 @@ public class InventoryComponent : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
-    
-    public void DropItem(int index, int amount)
-    {
-        InventorySlot data = inventory.DropItem(index, amount);
 
-        if (data == null || toDropItemPrefab == null)
+    public void OnDropItem(InventorySlot toDrop)
+    { 
+        if (toDrop == null || toDropItemPrefab == null)
         {
             return;
         }
 
-        toDropItemPrefab.Item = data.Item;
-        toDropItemPrefab.Amount = data.Amount;
+        toDropItemPrefab.Item = toDrop.Item;
+        toDropItemPrefab.Amount = toDrop.Amount;
 
-        Instantiate(toDropItemPrefab, transform.position, transform.rotation);
+        Instantiate(toDropItemPrefab, transform.position + DROP_OFFSET, transform.rotation).GetComponent<Rigidbody2D>()
+            .AddForce(new Vector2(0.0f, 3.0f), ForceMode2D.Impulse);
     }
 
     private void OnApplicationQuit()

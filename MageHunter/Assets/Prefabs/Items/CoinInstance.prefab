@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 28d3d6f2dbce5e648aa33de975a3de2b, type: 2}
   amount: 1
+  timeToWakeUp: 2

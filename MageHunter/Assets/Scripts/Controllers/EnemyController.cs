@@ -35,6 +35,6 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
 
     public void OnDeathInitiated()
     {
-        inventoryComponent.DropItem(0, 1);
+        inventoryComponent.Inventory.DropItem(0, 1);
     }
 }

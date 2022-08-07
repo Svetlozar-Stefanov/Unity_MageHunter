@@ -6,6 +6,10 @@ public class ItemComponent : MonoBehaviour
 {
     [SerializeField] private BaseItem item;
     [SerializeField] private int amount;
+    [SerializeField] private float timeToWakeUp;
+
+    private CircleCollider2D coll2d;
+    private float timer = 0;
 
     public ItemComponent(BaseItem item, int amount)
     {
@@ -24,12 +28,22 @@ public class ItemComponent : MonoBehaviour
         prefabGameObj.transform.localPosition = Vector3.zero;
         prefabGameObj.transform.rotation = Quaternion.identity;
 
-        CircleCollider2D collider2D = this.gameObject.AddComponent<CircleCollider2D>();
+        coll2d = this.gameObject.AddComponent<CircleCollider2D>();
         CircleCollider2D prefabCollider2D = prefabGameObj.GetComponent<CircleCollider2D>();
 
-        collider2D.isTrigger = true;
+        coll2d.offset = prefabCollider2D.offset;
+        coll2d.radius = prefabCollider2D.radius;
+    }
 
-        collider2D.offset = prefabCollider2D.offset;
-        collider2D.radius = prefabCollider2D.radius;
+    private void Update()
+    {
+        if (timer > timeToWakeUp && coll2d.isTrigger == false)
+        {
+            coll2d.isTrigger = true;
+        }
+        else if(timer < timeToWakeUp)
+        {
+            timer += 0.05f;
+        }
     }
 }
