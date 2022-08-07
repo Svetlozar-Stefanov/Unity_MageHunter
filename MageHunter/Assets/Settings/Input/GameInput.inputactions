@@ -280,6 +280,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "CloseInventory",
+                    "type": "Button",
+                    "id": "96e54c32-7401-4f8f-bb2c-29def1bfcf76",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "MenuMousePos",
                     "type": "Value",
                     "id": "f37e074b-b01e-47f9-a8aa-eebd081f47b3",
@@ -309,6 +318,17 @@
                     "processors": "",
                     "groups": "Keyboard and Mouse",
                     "action": "MenuMousePos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b284ab7-579d-4a51-a1be-2291b760c7f6",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "CloseInventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

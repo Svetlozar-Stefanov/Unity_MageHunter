@@ -4,7 +4,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour, IDamageableController<float>
 {
     [SerializeField] private HealthComponent healthComponent;
-    [SerializeField] private InventoryComponent inventoryComponent;
+    [SerializeField] private EnemyInventoryComponent inventoryComponent;
 
     public SpriteRenderer sprite;
 
@@ -35,6 +35,6 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
 
     public void OnDeathInitiated()
     {
-        inventoryComponent.Inventory.DropItem(0, 1);
+        inventoryComponent.DropRandomLoot();
     }
 }

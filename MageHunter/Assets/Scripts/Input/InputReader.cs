@@ -135,6 +135,16 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions, GameInput
         }
 	}
 
+	public void OnCloseInventory(InputAction.CallbackContext context)
+	{
+		if (isOpen && closeInventoryEvent != null)
+		{
+			EnableInGameInput();
+			isOpen = false;
+			closeInventoryEvent.Invoke();
+		}
+	}
+
 	public void EnableInGameInput()
 	{
 		gameInput.InGame.Enable();

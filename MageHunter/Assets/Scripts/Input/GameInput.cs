@@ -302,6 +302,15 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""CloseInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""96e54c32-7401-4f8f-bb2c-29def1bfcf76"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""MenuMousePos"",
                     ""type"": ""Value"",
                     ""id"": ""f37e074b-b01e-47f9-a8aa-eebd081f47b3"",
@@ -331,6 +340,17 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""MenuMousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8b284ab7-579d-4a51-a1be-2291b760c7f6"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""CloseInventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -370,6 +390,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         // InGameMenus
         m_InGameMenus = asset.FindActionMap("InGameMenus", throwIfNotFound: true);
         m_InGameMenus_OpenInventory = m_InGameMenus.FindAction("OpenInventory", throwIfNotFound: true);
+        m_InGameMenus_CloseInventory = m_InGameMenus.FindAction("CloseInventory", throwIfNotFound: true);
         m_InGameMenus_MenuMousePos = m_InGameMenus.FindAction("MenuMousePos", throwIfNotFound: true);
     }
 
@@ -528,12 +549,14 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_InGameMenus;
     private IInGameMenusActions m_InGameMenusActionsCallbackInterface;
     private readonly InputAction m_InGameMenus_OpenInventory;
+    private readonly InputAction m_InGameMenus_CloseInventory;
     private readonly InputAction m_InGameMenus_MenuMousePos;
     public struct InGameMenusActions
     {
         private @GameInput m_Wrapper;
         public InGameMenusActions(@GameInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @OpenInventory => m_Wrapper.m_InGameMenus_OpenInventory;
+        public InputAction @CloseInventory => m_Wrapper.m_InGameMenus_CloseInventory;
         public InputAction @MenuMousePos => m_Wrapper.m_InGameMenus_MenuMousePos;
         public InputActionMap Get() { return m_Wrapper.m_InGameMenus; }
         public void Enable() { Get().Enable(); }
@@ -547,6 +570,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @OpenInventory.started -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnOpenInventory;
                 @OpenInventory.performed -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnOpenInventory;
                 @OpenInventory.canceled -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnOpenInventory;
+                @CloseInventory.started -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnCloseInventory;
+                @CloseInventory.performed -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnCloseInventory;
+                @CloseInventory.canceled -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnCloseInventory;
                 @MenuMousePos.started -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnMenuMousePos;
                 @MenuMousePos.performed -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnMenuMousePos;
                 @MenuMousePos.canceled -= m_Wrapper.m_InGameMenusActionsCallbackInterface.OnMenuMousePos;
@@ -557,6 +583,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @OpenInventory.started += instance.OnOpenInventory;
                 @OpenInventory.performed += instance.OnOpenInventory;
                 @OpenInventory.canceled += instance.OnOpenInventory;
+                @CloseInventory.started += instance.OnCloseInventory;
+                @CloseInventory.performed += instance.OnCloseInventory;
+                @CloseInventory.canceled += instance.OnCloseInventory;
                 @MenuMousePos.started += instance.OnMenuMousePos;
                 @MenuMousePos.performed += instance.OnMenuMousePos;
                 @MenuMousePos.canceled += instance.OnMenuMousePos;
@@ -588,6 +617,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     public interface IInGameMenusActions
     {
         void OnOpenInventory(InputAction.CallbackContext context);
+        void OnCloseInventory(InputAction.CallbackContext context);
         void OnMenuMousePos(InputAction.CallbackContext context);
     }
 }
