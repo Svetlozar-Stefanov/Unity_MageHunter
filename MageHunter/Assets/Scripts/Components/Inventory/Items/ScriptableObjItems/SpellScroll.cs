@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SpellType
+{
+    Light,
+    Heavy
+}
+
 [CreateAssetMenu(fileName = "Spell", menuName = "Game/Items/SpellScroll")]
 public class SpellScroll : BaseItem
 {
@@ -11,6 +17,7 @@ public class SpellScroll : BaseItem
     }
 
     [Header("Specs")]
+    [SerializeField] private SpellType spellType = SpellType.Light;
     [SerializeField] private float speed = 40.0f;
     [SerializeField] private float damage = 10.0f;
     [SerializeField] private float cooldown = 10;
@@ -25,13 +32,14 @@ public class SpellScroll : BaseItem
     public bool HasLifespan { get => hasLifespan; }
     public float Lifespan { get => lifespan; }
     public float ManaCost { get => manaCost; }
+    public SpellType SpellType { get => spellType; }
 
     public override void Use()
     {
         PlayerController player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         if (player != null)
         {
-            player.FightingComponent.SpellBook.LearnSpell(this);
+            player.FightingComponent.SpellBook.AddItem(this, 1);
         }
     }
 }

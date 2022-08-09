@@ -3,42 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New SpellBook", menuName = "Game/SpellBook")]
-public class SpellBook : ScriptableObject
+public class SpellBook : Inventory
 {
-    public List<Spell> spells;
-
-    public bool LearnSpell(SpellScroll spellScroll)
+    public override bool AddItem(BaseItem item, int amount)
     {
-        if (!Contains(spellScroll))
+        if (amount <= 0 || index >= Capacity || item.type != ItemType.SpellScroll)
         {
-            Spell spell = new Spell(spellScroll);
-            spells.Add(spell);
-            return true;
+            return false;
         }
 
-        return false;
+        InventorySlot slot = GetItemSlot(item);
+        if (slot != null)
+        {
+            return false;
+        }
+
+        while (index < Capacity && items[index].Item != null)
+        {
+            index++;
+        }
+        items[index] = new InventorySlot(item, amount);
+
+        return true;
     }
 
-    public Spell GetSpell(int indx)
+    public override bool AddItemAt(BaseItem item, int amount, int i)
     {
-        if (indx < 0 || indx >= spells.Count)
+        if (amount <= 0 || i >= Capacity || (items[i].Item != null))
+        {
+            return false;
+        }
+
+        items[i] = new InventorySlot(item, amount);
+        return true;
+    }
+
+    public SpellScroll GetSpell(int i)
+    {
+        if (i >= Capacity || items[i].Item == null)
         {
             return null;
         }
 
-        return spells[indx];
-    }
-
-    public bool Contains(SpellScroll spellScroll)
-    {
-        for (int i = 0; i < spells.Count; i++)
-        {
-            if (spells[i].Data == spellScroll)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return (SpellScroll)items[i].Item;
     }
 }

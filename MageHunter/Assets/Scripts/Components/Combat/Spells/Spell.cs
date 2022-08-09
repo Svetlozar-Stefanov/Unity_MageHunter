@@ -6,14 +6,14 @@ public class Spell : MonoBehaviour
     [SerializeField] private SpellScroll spell;
     [SerializeField] private Rigidbody2D rb2d;
 
-    public SpellScroll Data { get => spell; }
-
-    public Spell(SpellScroll data)
+    public void SetUp(SpellScroll spellScroll)
     {
-        spell = data;
+        spell = spellScroll;
+
+        SetUpPrefab();
     }
 
-    private void Awake()
+    private void SetUpPrefab()
     {
         GameObject prefabGameObj = Instantiate(spell.prefab);
         //gameObject.transform.localScale = prefabGameObj.transform.localScale;

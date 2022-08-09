@@ -6,11 +6,11 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "New Inventory", menuName = "Game/Inventory")]
 public class Inventory : ScriptableObject
 {
-    [SerializeField] private List<InventorySlot> items = new List<InventorySlot>();
+    [SerializeField] protected List<InventorySlot> items = new List<InventorySlot>();
      public UnityAction<InventorySlot> onItemDrop;
 
-    private int index = 0;
-    private int size = 0;
+    protected int index = 0;
+    protected int size = 0;
 
     public List<InventorySlot> Items { get => items; }
     public int Capacity { get => items.Count; }
@@ -30,7 +30,7 @@ public class Inventory : ScriptableObject
         }
     }
 
-    public bool AddItem(BaseItem item, int amount)
+    public virtual bool AddItem(BaseItem item, int amount)
     {
         if (amount <= 0 || index >= Capacity)
         {
@@ -52,7 +52,7 @@ public class Inventory : ScriptableObject
         return true;
     }
 
-    public bool AddItemAt(BaseItem item, int amount, int i)
+    public virtual bool AddItemAt(BaseItem item, int amount, int i)
     {
         if (amount <= 0 || i >= Capacity || (items[i].Item != null && items[i].Item != item))
         {
@@ -69,7 +69,7 @@ public class Inventory : ScriptableObject
         return true;
     }
 
-    public InventorySlot GetItemSlot(BaseItem item)
+    public virtual InventorySlot GetItemSlot(BaseItem item)
     {
         for (int i = 0; i < Capacity; i++)
         {
@@ -81,7 +81,7 @@ public class Inventory : ScriptableObject
         return null;
     }
 
-    public void Swap(int i1, int i2)
+    public virtual void Swap(int i1, int i2)
     {
         if (i1 >= Capacity || i2 >= Capacity)
         {
@@ -93,7 +93,7 @@ public class Inventory : ScriptableObject
         items[i2] = temp;
     }
 
-    public bool DropItem(int index, int amount)
+    public virtual bool DropItem(int index, int amount)
     {
         if (index < 0 || index >= Capacity)
         {
@@ -117,7 +117,7 @@ public class Inventory : ScriptableObject
         return true;
     }
 
-    public void Clear()
+    public virtual void Clear()
     {
         for (int i = 0; i < Capacity; i++)
         {

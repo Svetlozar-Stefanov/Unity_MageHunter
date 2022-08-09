@@ -107,6 +107,15 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenSpellBook"",
+                    ""type"": ""Button"",
+                    ""id"": ""514aa04e-d333-4851-aaad-e29e81ae292f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -285,6 +294,17 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""action"": ""OpenInventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1b41c2e7-91bd-463f-a2fa-268b928334e9"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""OpenSpellBook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -355,6 +375,171 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""InDynamicMenu"",
+            ""id"": ""014ee587-6391-49f1-80a0-3b04403534b9"",
+            ""actions"": [
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""50aa8b87-769c-4445-bf4b-eb6308ad9b68"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""94e164be-a799-442f-a946-b8944aedc9e8"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MenuMousePos"",
+                    ""type"": ""Value"",
+                    ""id"": ""7ecb18f8-e7e4-4430-92c3-69cb1b31d9ad"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""OpenSpellBook"",
+                    ""type"": ""Button"",
+                    ""id"": ""9232c7cd-a01d-41b1-ae0a-943d1c03d78e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""28511b6f-6780-4fd2-a15c-a1890b2a28af"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""MenuMousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""9cd40900-0b5d-4ce6-ae09-ebc7b0345bbe"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""45239be1-907a-4c4d-b3d8-592805dc8ae0"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""74da8cd7-4210-484d-bf23-d2942b64654c"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""04d83f9f-44d4-4e50-83ed-004d7de472ae"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""6e5f6db8-3bd8-4cfd-bc44-45fd50a7a67b"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""0782711f-e177-44c8-a342-024ed2bc3c12"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""74cc92ce-0d29-4f47-8157-b56e4e91b5a4"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""305c9bb6-05a8-407c-92c4-80f4ac83dc47"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5c899cee-69bd-454e-833c-7729fc673643"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""70522d9a-b81b-4fd9-a847-02cac7255897"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""OpenSpellBook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -387,11 +572,18 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         m_InGame_HeavySpellScroll = m_InGame.FindAction("HeavySpellScroll", throwIfNotFound: true);
         m_InGame_QPressed = m_InGame.FindAction("QPressed", throwIfNotFound: true);
         m_InGame_OpenInventory = m_InGame.FindAction("OpenInventory", throwIfNotFound: true);
+        m_InGame_OpenSpellBook = m_InGame.FindAction("OpenSpellBook", throwIfNotFound: true);
         // InGameMenus
         m_InGameMenus = asset.FindActionMap("InGameMenus", throwIfNotFound: true);
         m_InGameMenus_OpenInventory = m_InGameMenus.FindAction("OpenInventory", throwIfNotFound: true);
         m_InGameMenus_CloseInventory = m_InGameMenus.FindAction("CloseInventory", throwIfNotFound: true);
         m_InGameMenus_MenuMousePos = m_InGameMenus.FindAction("MenuMousePos", throwIfNotFound: true);
+        // InDynamicMenu
+        m_InDynamicMenu = asset.FindActionMap("InDynamicMenu", throwIfNotFound: true);
+        m_InDynamicMenu_Jump = m_InDynamicMenu.FindAction("Jump", throwIfNotFound: true);
+        m_InDynamicMenu_Move = m_InDynamicMenu.FindAction("Move", throwIfNotFound: true);
+        m_InDynamicMenu_MenuMousePos = m_InDynamicMenu.FindAction("MenuMousePos", throwIfNotFound: true);
+        m_InDynamicMenu_OpenSpellBook = m_InDynamicMenu.FindAction("OpenSpellBook", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -460,6 +652,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_InGame_HeavySpellScroll;
     private readonly InputAction m_InGame_QPressed;
     private readonly InputAction m_InGame_OpenInventory;
+    private readonly InputAction m_InGame_OpenSpellBook;
     public struct InGameActions
     {
         private @GameInput m_Wrapper;
@@ -473,6 +666,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         public InputAction @HeavySpellScroll => m_Wrapper.m_InGame_HeavySpellScroll;
         public InputAction @QPressed => m_Wrapper.m_InGame_QPressed;
         public InputAction @OpenInventory => m_Wrapper.m_InGame_OpenInventory;
+        public InputAction @OpenSpellBook => m_Wrapper.m_InGame_OpenSpellBook;
         public InputActionMap Get() { return m_Wrapper.m_InGame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -509,6 +703,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @OpenInventory.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnOpenInventory;
                 @OpenInventory.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnOpenInventory;
                 @OpenInventory.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnOpenInventory;
+                @OpenSpellBook.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnOpenSpellBook;
+                @OpenSpellBook.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnOpenSpellBook;
+                @OpenSpellBook.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnOpenSpellBook;
             }
             m_Wrapper.m_InGameActionsCallbackInterface = instance;
             if (instance != null)
@@ -540,6 +737,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @OpenInventory.started += instance.OnOpenInventory;
                 @OpenInventory.performed += instance.OnOpenInventory;
                 @OpenInventory.canceled += instance.OnOpenInventory;
+                @OpenSpellBook.started += instance.OnOpenSpellBook;
+                @OpenSpellBook.performed += instance.OnOpenSpellBook;
+                @OpenSpellBook.canceled += instance.OnOpenSpellBook;
             }
         }
     }
@@ -593,6 +793,63 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         }
     }
     public InGameMenusActions @InGameMenus => new InGameMenusActions(this);
+
+    // InDynamicMenu
+    private readonly InputActionMap m_InDynamicMenu;
+    private IInDynamicMenuActions m_InDynamicMenuActionsCallbackInterface;
+    private readonly InputAction m_InDynamicMenu_Jump;
+    private readonly InputAction m_InDynamicMenu_Move;
+    private readonly InputAction m_InDynamicMenu_MenuMousePos;
+    private readonly InputAction m_InDynamicMenu_OpenSpellBook;
+    public struct InDynamicMenuActions
+    {
+        private @GameInput m_Wrapper;
+        public InDynamicMenuActions(@GameInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Jump => m_Wrapper.m_InDynamicMenu_Jump;
+        public InputAction @Move => m_Wrapper.m_InDynamicMenu_Move;
+        public InputAction @MenuMousePos => m_Wrapper.m_InDynamicMenu_MenuMousePos;
+        public InputAction @OpenSpellBook => m_Wrapper.m_InDynamicMenu_OpenSpellBook;
+        public InputActionMap Get() { return m_Wrapper.m_InDynamicMenu; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(InDynamicMenuActions set) { return set.Get(); }
+        public void SetCallbacks(IInDynamicMenuActions instance)
+        {
+            if (m_Wrapper.m_InDynamicMenuActionsCallbackInterface != null)
+            {
+                @Jump.started -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnJump;
+                @Move.started -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnMove;
+                @MenuMousePos.started -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnMenuMousePos;
+                @MenuMousePos.performed -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnMenuMousePos;
+                @MenuMousePos.canceled -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnMenuMousePos;
+                @OpenSpellBook.started -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnOpenSpellBook;
+                @OpenSpellBook.performed -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnOpenSpellBook;
+                @OpenSpellBook.canceled -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnOpenSpellBook;
+            }
+            m_Wrapper.m_InDynamicMenuActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+                @MenuMousePos.started += instance.OnMenuMousePos;
+                @MenuMousePos.performed += instance.OnMenuMousePos;
+                @MenuMousePos.canceled += instance.OnMenuMousePos;
+                @OpenSpellBook.started += instance.OnOpenSpellBook;
+                @OpenSpellBook.performed += instance.OnOpenSpellBook;
+                @OpenSpellBook.canceled += instance.OnOpenSpellBook;
+            }
+        }
+    }
+    public InDynamicMenuActions @InDynamicMenu => new InDynamicMenuActions(this);
     private int m_KeyboardandMouseSchemeIndex = -1;
     public InputControlScheme KeyboardandMouseScheme
     {
@@ -613,11 +870,19 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         void OnHeavySpellScroll(InputAction.CallbackContext context);
         void OnQPressed(InputAction.CallbackContext context);
         void OnOpenInventory(InputAction.CallbackContext context);
+        void OnOpenSpellBook(InputAction.CallbackContext context);
     }
     public interface IInGameMenusActions
     {
         void OnOpenInventory(InputAction.CallbackContext context);
         void OnCloseInventory(InputAction.CallbackContext context);
         void OnMenuMousePos(InputAction.CallbackContext context);
+    }
+    public interface IInDynamicMenuActions
+    {
+        void OnJump(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
+        void OnMenuMousePos(InputAction.CallbackContext context);
+        void OnOpenSpellBook(InputAction.CallbackContext context);
     }
 }

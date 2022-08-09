@@ -4,21 +4,17 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IDragHandler
+public class ItemUIDisplay : BaseItemUIDisplay
 {
-    [SerializeField] public Image borderImage;
-    [SerializeField] public Image itemGraphic;
     [SerializeField] public TextMeshProUGUI amountText;
-
     [SerializeField] private GameObject actionMenu;
 
-    public event Action<ItemUIDisplay> OnItemClicked, OnItemDroppedOn,
-        OnItemBeginDrag, OnItemEndDrag, OnRightMbtClicked, OnItemUsed, OnItemDroped;
+    public override event Action<BaseItemUIDisplay> OnItemClicked, OnItemDroppedOn,
+        OnItemBeginDrag, OnItemEndDrag;
 
-    private bool empty = true;
+    public event Action<ItemUIDisplay> OnRightMbtClicked, OnItemUsed, OnItemDroped;
+
     private bool isInActionMenu = false;
-
-    public bool Empty { get => empty; }
     public bool IsInActionMenu { get => isInActionMenu; set => isInActionMenu = value; }
 
     private void Awake()
@@ -26,22 +22,6 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         ResetData();
         Deselect();
         CloseActionMenu();
-    }
-
-    public void Deselect()
-    {
-        borderImage.enabled = false;
-    }
-
-    public void Select()
-    {
-        borderImage.enabled = true;
-    }
-
-    public void ResetData()
-    {
-        itemGraphic.gameObject.SetActive(false);
-        empty = true;
     }
 
     public void SetUp(Sprite graphic, int amount)
@@ -62,7 +42,6 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     {
         actionMenu.SetActive(true);
         isInActionMenu = true;
-
     }
 
     public void CloseActionMenu()
@@ -71,7 +50,7 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         isInActionMenu = false;
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public override void OnPointerClick(PointerEventData eventData)
     {
         PointerEventData pointer = (PointerEventData)eventData;
         if (pointer.button == PointerEventData.InputButton.Right)
@@ -84,7 +63,7 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         }
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public override void OnBeginDrag(PointerEventData eventData)
     {
         PointerEventData pointer = (PointerEventData)eventData;
         if (empty || isInActionMenu || pointer.button != PointerEventData.InputButton.Left)
@@ -95,17 +74,17 @@ public class ItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         OnItemBeginDrag?.Invoke(this);
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public override void OnEndDrag(PointerEventData eventData)
     {
-        OnItemEndDrag?.Invoke(this);
+        this.OnItemEndDrag?.Invoke(this);
     }
 
-    public void OnDrop(PointerEventData eventData)
+    public override void OnDrop(PointerEventData eventData)
     {
-        OnItemDroppedOn?.Invoke(this);
+        this.OnItemDroppedOn?.Invoke(this);
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public override void OnDrag(PointerEventData eventData)
     {
     }
 

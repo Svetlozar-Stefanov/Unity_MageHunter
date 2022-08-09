@@ -14,6 +14,8 @@ public class FightingComponent : MonoBehaviour
     [SerializeField] private Transform pivotPoint;
     [SerializeField] private Transform aim;
 
+    [SerializeField] private Spell spellPrefab;
+
     [Header("Specs")]
     [SerializeField] private SpellBook spellBook;
 
@@ -35,8 +37,10 @@ public class FightingComponent : MonoBehaviour
 
     public SpellBook SpellBook { get => spellBook; }
 
-    public SpellScroll CurrentLightSpell { get => lightSpellCaster.Spell.Data; }
-    public SpellScroll CurrentHeavySpell { get => heavySpellCaster.Spell.Data; }
+    public SpellScroll CurrentLightSpell { get => lightSpellCaster.SpellScroll; }
+    public SpellScroll CurrentHeavySpell { get => heavySpellCaster.SpellScroll; }
+    public SpellCaster[] LightSpells { get => lightSpells; set => lightSpells = value; }
+    public SpellCaster[] HeavySpells { get => heavySpells; set => heavySpells = value; }
 
     private void Awake()
     {
@@ -47,7 +51,8 @@ public class FightingComponent : MonoBehaviour
             for (int i = 0; i < LIGHT_SPELL_COUNT; i++)
             {
                 lightSpells[i] = gameObject.AddComponent<SpellCaster>();
-                lightSpells[i].Spell = spellBook.GetSpell(i);
+                lightSpells[i].SetUp(spellPrefab);
+                lightSpells[i].LoadSpell(spellBook.GetSpell(i));
             }
         }
         if (heavySpells == null)
@@ -56,7 +61,8 @@ public class FightingComponent : MonoBehaviour
             for (int i = 0; i < HEAVY_SPELL_COUNT; i++)
             {
                 heavySpells[i] = gameObject.AddComponent<SpellCaster>();
-                heavySpells[i].Spell = spellBook.GetSpell(i + 3);
+                heavySpells[i].SetUp(spellPrefab);
+                heavySpells[i].LoadSpell(spellBook.GetSpell(i + 3));
             }
         }
 
@@ -88,14 +94,14 @@ public class FightingComponent : MonoBehaviour
 
     public void LightSpellShift(int offset)
     {
-        lightIdx = SpellIndexShift(lightIdx, offset, lightSpells.Length);
-        lightSpellCaster = lightSpells[lightIdx];
+        lightIdx = SpellIndexShift(lightIdx, offset, LightSpells.Length);
+        lightSpellCaster = LightSpells[lightIdx];
     }
 
     public void HeavySpellShift(int offset)
     {
-        heavyIdx = SpellIndexShift(heavyIdx, offset, heavySpells.Length);
-        heavySpellCaster = heavySpells[heavyIdx];
+        heavyIdx = SpellIndexShift(heavyIdx, offset, HeavySpells.Length);
+        heavySpellCaster = HeavySpells[heavyIdx];
     }
 
     private int SpellIndexShift(int old, int offset, int size)
@@ -127,11 +133,11 @@ public class FightingComponent : MonoBehaviour
 
     private void CastSpell(SpellCaster spellCaster)
     {
-        if (mana >= spellCaster.Spell.Data.ManaCost)
+        if (mana >= spellCaster.SpellScroll.ManaCost)
         {
             if (spellCaster.Cast(aim.position, aim.rotation))
             {
-                mana -= spellCaster.Spell.Data.ManaCost;
+                mana -= spellCaster.SpellScroll.ManaCost;
             }
             
         }

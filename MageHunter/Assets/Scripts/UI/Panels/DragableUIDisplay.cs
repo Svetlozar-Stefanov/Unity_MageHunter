@@ -8,7 +8,7 @@ public class DragableUIDisplay : MonoBehaviour
 {
     [SerializeField] InputReader input;
     [SerializeField] private Canvas canvas;
-    [SerializeField] ItemUIDisplay item;
+    [SerializeField] BaseItemUIDisplay item;
 
     private Vector2 mousePos = new Vector2();
 
@@ -35,7 +35,12 @@ public class DragableUIDisplay : MonoBehaviour
 
     public void SetData(Sprite image, int amount)
     {
-        item.SetUp(image, amount);
+        ((ItemUIDisplay)item).SetUp(image, amount);
+    }
+
+    public void SetData(Sprite image)
+    {
+        item.SetUp(image);
     }
 
     private void Update()

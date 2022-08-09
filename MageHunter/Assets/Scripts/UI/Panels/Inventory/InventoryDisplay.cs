@@ -4,20 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InventoryDisplay : MonoBehaviour
+public class InventoryDisplay : BasePanelUIDisplay
 {
-    [SerializeField] private InputReader inputReader;
-    [SerializeField] private Inventory inventory;
-
-    [SerializeField] private RectTransform contentPanel;
-    [SerializeField] private ItemUIDisplay itemUIPrefab;
-
     [SerializeField] private DescriptionUIDisplay descriptionUIDisplay;
-    [SerializeField] private DragableUIDisplay dragableUI;
+
     [SerializeField] private GameObject dropMenu;
 
-    private List<ItemUIDisplay> itemUIInstances = new List<ItemUIDisplay>();
-    private int currentlyDraggedItemIndex = -1;
     private bool isInDropMenu = false;
     private int itemToDropIndex = -1;
 
@@ -35,25 +27,11 @@ public class InventoryDisplay : MonoBehaviour
         UpdateDisplay();
     }
 
-    public void Show()
-    {
-        gameObject.SetActive(true);
-        ResetDragableUI();
-        ResetSelection();
-    }
-
-    public void Hide()
-    {
-        gameObject.SetActive(false);
-        ResetDragableUI();
-        ResetSelection();
-    }
-
-    private void CreateDisplay()
+    protected override void CreateDisplay()
     {
         for (int i = 0; i < inventory.Capacity; i++)
         {
-            ItemUIDisplay uiItem = Instantiate(itemUIPrefab, contentPanel.transform);
+            ItemUIDisplay uiItem = Instantiate((ItemUIDisplay)itemUIPrefab, contentPanel.transform);
             uiItem.transform.SetParent(contentPanel);
             itemUIInstances.Add(uiItem);
 
@@ -72,7 +50,7 @@ public class InventoryDisplay : MonoBehaviour
         }
     }
 
-    private void HandleRightClick(ItemUIDisplay obj)
+    public void HandleRightClick(ItemUIDisplay obj)
     {
         if (isInDropMenu)
         {
@@ -113,7 +91,7 @@ public class InventoryDisplay : MonoBehaviour
         }
     }
 
-    private void HandleItemBeginDrag(ItemUIDisplay obj)
+    protected override void HandleItemBeginDrag(BaseItemUIDisplay obj)
     {
         if (isInDropMenu)
         {
@@ -133,13 +111,7 @@ public class InventoryDisplay : MonoBehaviour
         dragableUI.SetData(slot.Item.icon, slot.Amount);
     }
 
-    private void HandleEndDrag(ItemUIDisplay obj)
-    {
-        ResetDragableUI();
-        ResetSelection();
-    }
-
-    private void HandleSwap(ItemUIDisplay obj)
+    protected override void HandleSwap(BaseItemUIDisplay obj)
     {
         int index = itemUIInstances.IndexOf(obj);
         if (index == -1 || currentlyDraggedItemIndex == -1)
@@ -173,7 +145,7 @@ public class InventoryDisplay : MonoBehaviour
         ResetSelection();
     }
 
-    private void HandleItemSelection(ItemUIDisplay obj)
+    protected override void HandleItemSelection(BaseItemUIDisplay obj)
     {
         if (isInDropMenu)
         {
@@ -237,28 +209,14 @@ public class InventoryDisplay : MonoBehaviour
             }
             else
             {
-                itemUIInstances[itemToDropIndex].SetAmount(inventory.Items[itemToDropIndex].Amount);
+                ((ItemUIDisplay)itemUIInstances[itemToDropIndex]).SetAmount(inventory.Items[itemToDropIndex].Amount);
             }
         }
 
         HandleOnDropCancel();
     }
 
-    private void ResetSelection()
-    {
-        descriptionUIDisplay.ResetDescription();
-        DeselectAllItems();
-    }
-
-    private void DeselectAllItems()
-    {
-        foreach (var item in itemUIInstances)
-        {
-            item.Deselect();
-        }
-    }
-
-    private void UpdateDisplay()
+    protected override void UpdateDisplay()
     {
         for (int i = 0; i < inventory.Capacity; i++)
         {
@@ -270,27 +228,21 @@ public class InventoryDisplay : MonoBehaviour
                 }
                 else
                 {
-                    itemUIInstances[i].SetAmount(inventory.Items[i].Amount);
+                    ((ItemUIDisplay)itemUIInstances[i]).SetAmount(inventory.Items[i].Amount);
                 }
             }
         }
     }
 
-    private void SetupUIPrefab(InventorySlot item, int index)
+    protected override void SetupUIPrefab(InventorySlot item, int index)
     {
         if (item.Item != null)
         {
-            itemUIInstances[index].SetUp(item.Item.icon, item.Amount);
+            ((ItemUIDisplay)itemUIInstances[index]).SetUp(item.Item.icon, item.Amount);
         }
         else
         {
             itemUIInstances[index].ResetData();
         }
-    }
-
-    private void ResetDragableUI()
-    {
-        dragableUI.Toggle(false);
-        currentlyDraggedItemIndex = -1;
     }
 }

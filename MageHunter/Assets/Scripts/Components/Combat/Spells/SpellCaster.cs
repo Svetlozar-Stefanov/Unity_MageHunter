@@ -4,19 +4,30 @@ using UnityEngine;
 
 public class SpellCaster : MonoBehaviour
 {
-    [SerializeField] private Spell spell;
+    private SpellScroll spellScroll;
+    private Spell spellPrefab;
 
-    public Spell Spell { get => spell; set => spell = value; }
+    public SpellScroll SpellScroll { get => spellScroll; }
 
     private float timer = 0.0f;
     private bool canUse = true;
+
+    public void SetUp(Spell prefab)
+    {
+        spellPrefab = prefab;
+    }
+
+    public void LoadSpell(SpellScroll spellScroll)
+    {
+        this.spellScroll = spellScroll;
+    }
 
     private void Update()
     {
         if (!canUse)
         {
             timer += 0.05f;
-            if (timer >= spell.Data.Cooldown)
+            if (timer >= spellScroll.Cooldown)
             {
                 canUse = true;
                 timer = 0.0f;
@@ -31,7 +42,9 @@ public class SpellCaster : MonoBehaviour
             return false;
         }
 
-        Instantiate(spell, sTransform, sRotation).Cast();
+        Spell castSpell = Instantiate(spellPrefab, sTransform, sRotation);
+        castSpell.SetUp(spellScroll);
+        castSpell.Cast();
 
         canUse = false;
 

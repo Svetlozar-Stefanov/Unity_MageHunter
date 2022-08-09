@@ -3,7 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [CreateAssetMenu(fileName = "InputReader", menuName = "Game/IO/Input Reader")]
-public class InputReader : ScriptableObject, GameInput.IInGameActions, GameInput.IInGameMenusActions
+public class InputReader : ScriptableObject, GameInput.IInGameActions, GameInput.IInGameMenusActions, GameInput.IInDynamicMenuActions
 {
     //Gameplay
     public event UnityAction jumpEvent;
@@ -17,6 +17,9 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions, GameInput
 
 	public event UnityAction<Vector2> moveMouseEvent;
 
+	public event UnityAction openSpellBookEvent;
+	public event UnityAction closeSpellBookEvent;
+
 	//InGameMenus
 	public event UnityAction openInventoryEvent;
 	public event UnityAction closeInventoryEvent;
@@ -24,7 +27,8 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions, GameInput
 
 
 	private GameInput gameInput;
-	private bool isOpen = false;
+	private bool inventoryIsOpen = false;
+	private bool spellBookIsOpen = false;
 
 
 	public bool isChangingSpellSelector = false;
@@ -35,6 +39,7 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions, GameInput
 			gameInput = new GameInput();
 			gameInput.InGame.SetCallbacks(this);
 			gameInput.InGameMenus.SetCallbacks(this);
+			gameInput.InDynamicMenu.SetCallbacks(this);
 		}
 		EnableInGameInput();
 	}
@@ -121,27 +126,43 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions, GameInput
 
 	public void OnOpenInventory(InputAction.CallbackContext context)
 	{
-        if (!isOpen && openInventoryEvent != null)
+        if (!inventoryIsOpen && openInventoryEvent != null)
         {
 			EnableInGameMenusInput();
-			isOpen = true;
+			inventoryIsOpen = true;
 			openInventoryEvent.Invoke();
         }
-        else if (isOpen && closeInventoryEvent != null)
+        else if (inventoryIsOpen && closeInventoryEvent != null)
         {
 			EnableInGameInput();
-			isOpen = false;
+			inventoryIsOpen = false;
 			closeInventoryEvent.Invoke();
         }
 	}
 
 	public void OnCloseInventory(InputAction.CallbackContext context)
 	{
-		if (isOpen && closeInventoryEvent != null)
+		if (inventoryIsOpen && closeInventoryEvent != null)
 		{
 			EnableInGameInput();
-			isOpen = false;
+			inventoryIsOpen = false;
 			closeInventoryEvent.Invoke();
+		}
+	}
+
+	public void OnOpenSpellBook(InputAction.CallbackContext context)
+	{
+		if (!spellBookIsOpen && openSpellBookEvent != null)
+		{
+			EnableInDynamicMenuInput();
+			spellBookIsOpen = true;
+			openSpellBookEvent.Invoke();
+		}
+		else if (spellBookIsOpen && closeSpellBookEvent != null)
+		{
+			EnableInGameInput();
+			spellBookIsOpen = false;
+			closeSpellBookEvent.Invoke();
 		}
 	}
 
@@ -149,17 +170,27 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions, GameInput
 	{
 		gameInput.InGame.Enable();
 		gameInput.InGameMenus.Disable();
+		gameInput.InDynamicMenu.Disable();
 	}
 
 	public void EnableInGameMenusInput()
     {
 		gameInput.InGameMenus.Enable();
 		gameInput.InGame.Disable();
-    }
+		gameInput.InDynamicMenu.Disable();
+	}
+
+	public void EnableInDynamicMenuInput()
+	{
+		gameInput.InDynamicMenu.Enable();
+		gameInput.InGame.Disable();
+		gameInput.InGameMenus.Disable();
+	}
 
 	public void DisableAllInput()
 	{
 		gameInput.InGame.Disable();
 		gameInput.InGameMenus.Disable();
+		gameInput.InDynamicMenu.Disable();
 	}
 }
