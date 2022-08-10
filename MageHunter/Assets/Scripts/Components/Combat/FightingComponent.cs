@@ -52,7 +52,6 @@ public class FightingComponent : MonoBehaviour
             {
                 lightSpells[i] = gameObject.AddComponent<SpellCaster>();
                 lightSpells[i].SetUp(spellPrefab);
-                lightSpells[i].LoadSpell(spellBook.GetSpell(i));
             }
         }
         if (heavySpells == null)
@@ -62,7 +61,6 @@ public class FightingComponent : MonoBehaviour
             {
                 heavySpells[i] = gameObject.AddComponent<SpellCaster>();
                 heavySpells[i].SetUp(spellPrefab);
-                heavySpells[i].LoadSpell(spellBook.GetSpell(i + 3));
             }
         }
 
@@ -84,11 +82,19 @@ public class FightingComponent : MonoBehaviour
 
     public void CastLightSpell()
     {
+        if (lightSpellCaster.SpellScroll == null)
+        {
+            return;
+        }
         CastSpell(lightSpellCaster);
     }
 
     public void CastHeavySpell()
     {
+        if (heavySpellCaster.SpellScroll == null)
+        {
+            return;
+        }
         CastSpell(heavySpellCaster);
     }
 
@@ -102,6 +108,76 @@ public class FightingComponent : MonoBehaviour
     {
         heavyIdx = SpellIndexShift(heavyIdx, offset, HeavySpells.Length);
         heavySpellCaster = HeavySpells[heavyIdx];
+    }
+
+    public bool LoadSpellAtSlot(int index, SpellScroll spellScroll)
+    {
+        SpellCaster[] spells = null;
+        if (spellScroll.SpellType == SpellType.Light)
+        {
+            spells = lightSpells;
+        }
+        else if (spellScroll.SpellType == SpellType.Heavy)
+        {
+            spells = heavySpells;
+        }
+
+        if (index < 0 || index >= spells.Length || ContainsSpell(spells, spellScroll))
+        {
+            return false;
+        }
+
+        spells[index].LoadSpell(spellScroll);
+        return true;
+    }
+
+    public bool SwapSpells(SpellType type ,int i1, int i2)
+    {
+        SpellCaster[] spells = null;
+        if (type == SpellType.Light)
+        {
+            if (i1 >= lightSpells.Length || i2 >= lightSpells.Length)
+            {
+                return false;
+            }
+
+            spells = lightSpells;
+        }
+        else if (type == SpellType.Heavy)
+        {
+            if (i1 >= heavySpells.Length || i2 >= heavySpells.Length)
+            {
+                return false;
+            }
+            spells = heavySpells;
+        }
+
+        var temp = spells[i1];
+        spells[i1] = spells[i2];
+        spells[i2] = temp;
+
+        if (type == SpellType.Light || (i1 == lightIdx || i2 == lightIdx))
+        {
+            lightSpellCaster = lightSpells[lightIdx];
+        }
+        if (type == SpellType.Heavy && (i1 == heavyIdx || i2 == heavyIdx))
+        {
+            heavySpellCaster = heavySpells[heavyIdx];
+        }
+
+        return true;
+    }
+
+    private bool ContainsSpell(SpellCaster[] spells, SpellScroll spellScroll)
+    {
+        for (int i = 0; i < spells.Length; i++)
+        {
+            if (spells[i].SpellScroll == spellScroll)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private int SpellIndexShift(int old, int offset, int size)

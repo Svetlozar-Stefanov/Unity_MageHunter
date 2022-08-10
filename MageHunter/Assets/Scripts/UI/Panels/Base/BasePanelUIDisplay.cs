@@ -71,10 +71,8 @@ public class BasePanelUIDisplay : MonoBehaviour
         }
         currentlyDraggedItemIndex = index;
 
-        InventorySlot slot = inventory.Items[index];
-
         dragableUI.Toggle(true);
-        dragableUI.SetData(slot.Item.icon);
+        dragableUI.SetData(itemUIInstances[index].itemGraphic.sprite);
     }
 
     protected virtual void HandleEndDrag(BaseItemUIDisplay obj)

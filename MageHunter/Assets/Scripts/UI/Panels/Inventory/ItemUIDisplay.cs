@@ -76,12 +76,12 @@ public class ItemUIDisplay : BaseItemUIDisplay
 
     public override void OnEndDrag(PointerEventData eventData)
     {
-        this.OnItemEndDrag?.Invoke(this);
-    }
+        OnItemEndDrag?.Invoke(this);
+    }   
 
     public override void OnDrop(PointerEventData eventData)
     {
-        this.OnItemDroppedOn?.Invoke(this);
+        OnItemDroppedOn?.Invoke(this);
     }
 
     public override void OnDrag(PointerEventData eventData)

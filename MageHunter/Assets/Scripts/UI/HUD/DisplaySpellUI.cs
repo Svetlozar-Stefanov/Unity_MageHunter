@@ -26,7 +26,24 @@ public class DisplaySpellUI : MonoBehaviour
             heavySpellBackPanel.color = Color.white;
         }
 
-        lightSpell.sprite = playerController.FightingComponent.CurrentLightSpell.icon;
-        heavySpell.sprite = playerController.FightingComponent.CurrentHeavySpell.icon;
+        if (playerController.FightingComponent.CurrentLightSpell == null)
+        {
+            lightSpell.enabled = false;
+        }
+        else
+        {
+            lightSpell.enabled = true;
+            lightSpell.sprite = playerController.FightingComponent.CurrentLightSpell.icon;
+        }
+
+        if (playerController.FightingComponent.CurrentHeavySpell == null)
+        {
+            heavySpell.enabled = false;
+        }
+        else
+        {
+            heavySpell.enabled = true;
+            heavySpell.sprite = playerController.FightingComponent.CurrentHeavySpell.icon;
+        }
     }
 }

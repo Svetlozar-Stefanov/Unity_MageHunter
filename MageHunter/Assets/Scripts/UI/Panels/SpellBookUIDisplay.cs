@@ -26,7 +26,7 @@ public class SpellBookUIDisplay : BasePanelUIDisplay
     {
         for (int i = 0; i < inventory.Capacity; i++)
         {
-            BaseItemUIDisplay uiItem = Instantiate(itemUIPrefab, contentPanel.transform);
+            SpellItemUIDisplay uiItem = Instantiate((SpellItemUIDisplay)itemUIPrefab, contentPanel.transform);
             uiItem.transform.SetParent(contentPanel);
             itemUIInstances.Add(uiItem);
 
@@ -41,26 +41,40 @@ public class SpellBookUIDisplay : BasePanelUIDisplay
             SetupUIPrefab(inventory.Items[i], i);
         }
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < fightingComponent.LightSpells.Length; i++)
         {
-            BaseItemUIDisplay uiItem = Instantiate(itemUIPrefab, contentPanel.transform);
-            ((SpellItemUIDisplay)uiItem).Type = SlotType.LightSpell;
+            SpellItemUIDisplay uiItem = Instantiate((SpellItemUIDisplay)itemUIPrefab, contentPanel.transform);
+            uiItem.Type = SlotType.LightSpell;
             uiItem.transform.SetParent(lightContent);
             itemUIInstances.Add(uiItem);
+
+            uiItem.OnItemDroppedOn += HandleSwap;
+            uiItem.OnItemBeginDrag += HandleItemBeginDrag;
+            uiItem.OnItemDroppedOn += HandleSwap;
+            uiItem.OnItemEndDrag += HandleEndDrag;
+
+            uiItem.ResetData();
         }
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < fightingComponent.HeavySpells.Length; i++)
         {
-            BaseItemUIDisplay uiItem = Instantiate(itemUIPrefab, contentPanel.transform);
-            ((SpellItemUIDisplay)uiItem).Type = SlotType.HeavySpell;
+            SpellItemUIDisplay uiItem = Instantiate((SpellItemUIDisplay)itemUIPrefab, contentPanel.transform);
+            uiItem.Type = SlotType.HeavySpell;
             uiItem.transform.SetParent(heavyContent);
             itemUIInstances.Add(uiItem);
+
+            uiItem.OnItemDroppedOn += HandleSwap;
+            uiItem.OnItemBeginDrag += HandleItemBeginDrag;
+            uiItem.OnItemDroppedOn += HandleSwap;
+            uiItem.OnItemEndDrag += HandleEndDrag;
+
+            uiItem.ResetData();
         }
     }
 
     protected override void HandleSwap(BaseItemUIDisplay obj)
     {
         int index = itemUIInstances.IndexOf(obj);
-        if (index == -1 || currentlyDraggedItemIndex == -1)
+        if (index == -1 || currentlyDraggedItemIndex == -1 || index == currentlyDraggedItemIndex)
         {
             return;
         }
@@ -72,21 +86,22 @@ public class SpellBookUIDisplay : BasePanelUIDisplay
             return;
         }
 
-        InventorySlot dragged = inventory.Items[currentlyDraggedItemIndex];
-        InventorySlot toSwap = inventory.Items[index];
-        if (dragged == toSwap)
-        {
-            return;
-        }
-
         if (draggedUI.Type == SlotType.Default && toSwapUI.Type == SlotType.Default)
         {
+            InventorySlot dragged = inventory.Items[currentlyDraggedItemIndex];
+            InventorySlot toSwap = inventory.Items[index];
+            if (dragged == toSwap)
+            {
+                return;
+            }
+
             inventory.Swap(index, currentlyDraggedItemIndex);
             SetupUIPrefab(dragged, index);
             SetupUIPrefab(toSwap, currentlyDraggedItemIndex);
         }
-        else if(draggedUI.Type == SlotType.Default && toSwapUI.Type != SlotType.Default)
+        else if (draggedUI.Type == SlotType.Default && toSwapUI.Type != SlotType.Default)
         {
+            InventorySlot dragged = inventory.Items[currentlyDraggedItemIndex];
             SpellScroll spell = (SpellScroll)dragged.Item;
             if (spell == null || (spell.SpellType == SpellType.Light && toSwapUI.Type != SlotType.LightSpell)
                 || spell.SpellType == SpellType.Heavy && toSwapUI.Type != SlotType.HeavySpell)
@@ -96,15 +111,37 @@ public class SpellBookUIDisplay : BasePanelUIDisplay
 
             if (spell.SpellType == SpellType.Light)
             {
-                fightingComponent.LightSpells[itemUIInstances.Count - inventory.Capacity + index].LoadSpell(spell);
-                SetupUIPrefab(dragged, index);
-                SetupUIPrefab(toSwap, currentlyDraggedItemIndex);
+                if (fightingComponent.LoadSpellAtSlot(index - inventory.Capacity, spell))
+                {
+                    SetupUIPrefab(dragged, index);
+                }
             }
             else if (spell.SpellType == SpellType.Heavy)
             {
-                fightingComponent.HeavySpells[itemUIInstances.Count - inventory.Capacity + index - 3].LoadSpell(spell);
-                SetupUIPrefab(dragged, index);
-                SetupUIPrefab(toSwap, currentlyDraggedItemIndex);
+                if (fightingComponent.LoadSpellAtSlot(index - inventory.Capacity - fightingComponent.LightSpells.Length, spell))
+                {
+                    SetupUIPrefab(dragged, index);
+                }
+            }
+        }
+        else if (draggedUI.Type == SlotType.LightSpell && toSwapUI.Type == SlotType.LightSpell)
+        {
+            if (fightingComponent.SwapSpells(SpellType.Light, currentlyDraggedItemIndex - inventory.Capacity, index - inventory.Capacity))
+            {
+                var temp = itemUIInstances[index].itemGraphic.sprite;
+                itemUIInstances[index].SetUp(itemUIInstances[currentlyDraggedItemIndex].itemGraphic.sprite);
+                itemUIInstances[currentlyDraggedItemIndex].SetUp(temp);
+            }
+        }
+        else if (draggedUI.Type == SlotType.HeavySpell && toSwapUI.Type == SlotType.HeavySpell)
+        {
+            if(fightingComponent.SwapSpells(SpellType.Heavy
+                , currentlyDraggedItemIndex - inventory.Capacity - fightingComponent.LightSpells.Length
+                , index - inventory.Capacity - fightingComponent.LightSpells.Length))
+            {
+                var temp = itemUIInstances[index].itemGraphic.sprite;
+                itemUIInstances[index].SetUp(itemUIInstances[currentlyDraggedItemIndex].itemGraphic.sprite);
+                itemUIInstances[currentlyDraggedItemIndex].SetUp(temp);
             }
         }
 
