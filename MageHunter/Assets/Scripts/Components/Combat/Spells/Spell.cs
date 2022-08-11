@@ -15,20 +15,27 @@ public class Spell : MonoBehaviour
 
     private void SetUpPrefab()
     {
-        GameObject prefabGameObj = Instantiate(spell.prefab);
+        GameObject prefabGameObj = Instantiate(spell.projectilePrefab);
         //gameObject.transform.localScale = prefabGameObj.transform.localScale;
         prefabGameObj.transform.SetParent(this.transform);
         prefabGameObj.transform.localPosition = Vector3.zero;
         prefabGameObj.transform.rotation = Quaternion.identity;
 
-        //TO ADD WHEN ADDING NON-TEST SPELLS
-        //CircleCollider2D collider2D = this.gameObject.AddComponent<CircleCollider2D>();
-        //CircleCollider2D prefabCollider2D = prefabGameObj.GetComponent<CircleCollider2D>();
+        if (!spell.ShouldBounce)
+        {
+            prefabGameObj.GetComponent<CircleCollider2D>().isTrigger = true;
+        }
+        else
+        {
+            CircleCollider2D collider2D = this.gameObject.AddComponent<CircleCollider2D>();
+            CircleCollider2D prefabCollider2D = prefabGameObj.GetComponent<CircleCollider2D>();
 
-        //collider2D.isTrigger = true;
+            prefabCollider2D.isTrigger = false;
+            collider2D.isTrigger = true;
 
-        //collider2D.offset = prefabCollider2D.offset;
-        //collider2D.radius = prefabCollider2D.radius;
+            collider2D.offset = prefabCollider2D.offset;
+            collider2D.radius = prefabCollider2D.radius;
+        }
     }
 
     public void Cast()

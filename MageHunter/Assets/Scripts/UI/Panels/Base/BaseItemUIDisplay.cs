@@ -11,7 +11,7 @@ public class BaseItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDrag
     [SerializeField] public Image borderImage;
     [SerializeField] public Image itemGraphic;
 
-    public virtual event Action<BaseItemUIDisplay> OnItemClicked, OnItemDroppedOn,
+    public virtual event Action<BaseItemUIDisplay> OnItemClicked, OnRightMbtClicked, OnItemDroppedOn,
         OnItemBeginDrag, OnItemEndDrag;
 
     protected bool empty = true;
@@ -50,7 +50,15 @@ public class BaseItemUIDisplay : MonoBehaviour, IPointerClickHandler, IBeginDrag
 
     public virtual void OnPointerClick(PointerEventData eventData)
     {
-        OnItemClicked?.Invoke(this);
+        PointerEventData pointer = (PointerEventData)eventData;
+        if (pointer.button == PointerEventData.InputButton.Right)
+        {
+            OnRightMbtClicked?.Invoke(this);
+        }
+        else
+        {
+            OnItemClicked?.Invoke(this);
+        }
     }
 
     public virtual void OnBeginDrag(PointerEventData eventData)

@@ -17,6 +17,11 @@ public class SpellCaster : MonoBehaviour
         spellPrefab = prefab;
     }
 
+    public void ResetSpell()
+    {
+        spellScroll = null;
+    }
+
     public void LoadSpell(SpellScroll spellScroll)
     {
         this.spellScroll = spellScroll;

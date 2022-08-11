@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,6 +49,7 @@ public class SpellBookUIDisplay : BasePanelUIDisplay
             uiItem.transform.SetParent(lightContent);
             itemUIInstances.Add(uiItem);
 
+            uiItem.OnRightMbtClicked += HandleRightClick;
             uiItem.OnItemDroppedOn += HandleSwap;
             uiItem.OnItemBeginDrag += HandleItemBeginDrag;
             uiItem.OnItemDroppedOn += HandleSwap;
@@ -62,6 +64,7 @@ public class SpellBookUIDisplay : BasePanelUIDisplay
             uiItem.transform.SetParent(heavyContent);
             itemUIInstances.Add(uiItem);
 
+            uiItem.OnRightMbtClicked += HandleRightClick;
             uiItem.OnItemDroppedOn += HandleSwap;
             uiItem.OnItemBeginDrag += HandleItemBeginDrag;
             uiItem.OnItemDroppedOn += HandleSwap;
@@ -128,24 +131,62 @@ public class SpellBookUIDisplay : BasePanelUIDisplay
         {
             if (fightingComponent.SwapSpells(SpellType.Light, currentlyDraggedItemIndex - inventory.Capacity, index - inventory.Capacity))
             {
-                var temp = itemUIInstances[index].itemGraphic.sprite;
-                itemUIInstances[index].SetUp(itemUIInstances[currentlyDraggedItemIndex].itemGraphic.sprite);
-                itemUIInstances[currentlyDraggedItemIndex].SetUp(temp);
+                var temp = itemUIInstances[currentlyDraggedItemIndex].itemGraphic.sprite;
+                if (!itemUIInstances[index].Empty)
+                {
+                    itemUIInstances[currentlyDraggedItemIndex].SetUp(itemUIInstances[index].itemGraphic.sprite);
+                }
+                else
+                {
+                    itemUIInstances[currentlyDraggedItemIndex].ResetData();
+                }
+                itemUIInstances[index].SetUp(temp);
             }
         }
         else if (draggedUI.Type == SlotType.HeavySpell && toSwapUI.Type == SlotType.HeavySpell)
         {
-            if(fightingComponent.SwapSpells(SpellType.Heavy
-                , currentlyDraggedItemIndex - inventory.Capacity - fightingComponent.LightSpells.Length
-                , index - inventory.Capacity - fightingComponent.LightSpells.Length))
+            if (fightingComponent.SwapSpells(SpellType.Heavy, currentlyDraggedItemIndex - inventory.Capacity - 3, index - inventory.Capacity - 3))
             {
-                var temp = itemUIInstances[index].itemGraphic.sprite;
-                itemUIInstances[index].SetUp(itemUIInstances[currentlyDraggedItemIndex].itemGraphic.sprite);
-                itemUIInstances[currentlyDraggedItemIndex].SetUp(temp);
+                var temp = itemUIInstances[currentlyDraggedItemIndex].itemGraphic.sprite;
+                if (!itemUIInstances[index].Empty)
+                {
+                    itemUIInstances[currentlyDraggedItemIndex].SetUp(itemUIInstances[index].itemGraphic.sprite);
+                }
+                else
+                {
+                    itemUIInstances[currentlyDraggedItemIndex].ResetData();
+                }
+                itemUIInstances[index].SetUp(temp);
             }
         }
 
         ResetDragableUI();
         ResetSelection();
+    }
+
+    private void HandleRightClick(BaseItemUIDisplay obj)
+    {
+        int index = itemUIInstances.IndexOf(obj);
+        if (index == -1)
+        {
+            return;
+        }
+
+        SpellItemUIDisplay spell = (SpellItemUIDisplay)obj;
+        if (spell == null)
+        {
+            return;
+        }
+
+        if (spell.Type == SlotType.LightSpell
+            && fightingComponent.FreeSlot(SpellType.Light, index - inventory.Capacity))
+        {
+            obj.ResetData();
+        }
+        else if (spell.Type == SlotType.HeavySpell
+            && fightingComponent.FreeSlot(SpellType.Heavy, index - inventory.Capacity - 3))
+        {
+            obj.ResetData();
+        }
     }
 }

@@ -17,12 +17,14 @@ public class SpellScroll : BaseItem
     }
 
     [Header("Specs")]
+    [SerializeField] public GameObject projectilePrefab;
     [SerializeField] private SpellType spellType = SpellType.Light;
     [SerializeField] private float speed = 40.0f;
     [SerializeField] private float damage = 10.0f;
     [SerializeField] private float cooldown = 10;
     [SerializeField] private float manaCost = 5.0f ;
 
+    [SerializeField] private bool shouldBounce = false;
     [SerializeField] private bool hasLifespan = true;
     [SerializeField] private float lifespan = 5.0f;
 
@@ -33,6 +35,7 @@ public class SpellScroll : BaseItem
     public float Lifespan { get => lifespan; }
     public float ManaCost { get => manaCost; }
     public SpellType SpellType { get => spellType; }
+    public bool ShouldBounce { get => shouldBounce; }
 
     public override void Use()
     {

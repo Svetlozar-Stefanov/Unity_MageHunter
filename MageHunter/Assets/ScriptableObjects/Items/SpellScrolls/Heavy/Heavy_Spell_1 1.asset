@@ -18,9 +18,12 @@ MonoBehaviour:
   itemName: Heavy Spell 1
   description: 
   sellValue: 0
+  projectilePrefab: {fileID: 4768909484186788735, guid: 732f0c46296b8a34eb18d170fc3e7868, type: 3}
+  spellType: 1
   speed: 40
   damage: 10
   cooldown: 10
   manaCost: 5
+  shouldBounce: 0
   hasLifespan: 1
   lifespan: 5

@@ -23,6 +23,7 @@ public class SpellBook : Inventory
             index++;
         }
         items[index] = new InventorySlot(item, amount);
+        index = 0;
 
         return true;
     }

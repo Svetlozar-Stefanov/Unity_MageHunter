@@ -7,12 +7,12 @@ using UnityEngine.UI;
 public class ItemUIDisplay : BaseItemUIDisplay
 {
     [SerializeField] public TextMeshProUGUI amountText;
-    [SerializeField] private GameObject actionMenu;
+    [SerializeField] private ActionMenuUIDisplay actionMenu;
 
-    public override event Action<BaseItemUIDisplay> OnItemClicked, OnItemDroppedOn,
+    public override event Action<BaseItemUIDisplay> OnItemClicked, OnRightMbtClicked, OnItemDroppedOn,
         OnItemBeginDrag, OnItemEndDrag;
 
-    public event Action<ItemUIDisplay> OnRightMbtClicked, OnItemUsed, OnItemDroped;
+    public event Action<ItemUIDisplay> OnItemUsed, OnItemDroped;
 
     private bool isInActionMenu = false;
     public bool IsInActionMenu { get => isInActionMenu; set => isInActionMenu = value; }
@@ -21,7 +21,7 @@ public class ItemUIDisplay : BaseItemUIDisplay
     {
         ResetData();
         Deselect();
-        CloseActionMenu();
+        CloseFullActionMenu();
     }
 
     public void SetUp(Sprite graphic, int amount)
@@ -38,15 +38,27 @@ public class ItemUIDisplay : BaseItemUIDisplay
         amountText.text = amm.ToString("n0");
     }
 
-    public void OpenActionMenu()
+    public void OpenFullActionMenu()
     {
-        actionMenu.SetActive(true);
+        actionMenu.Toggle(true);
         isInActionMenu = true;
     }
 
-    public void CloseActionMenu()
+    public void CloseFullActionMenu()
     {
-        actionMenu.SetActive(false);
+        actionMenu.Toggle(false);
+        isInActionMenu = false;
+    }
+
+    public void OpenDropActionMenu()
+    {
+        actionMenu.ToggleDropButton(true);
+        isInActionMenu = true;
+    }
+
+    public void CloseDropActionMenu()
+    {
+        actionMenu.ToggleDropButton(false);
         isInActionMenu = false;
     }
 

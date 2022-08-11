@@ -66,6 +66,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5bd1b6a30fcaf741bae1cb5c5b61d17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 28d3d6f2dbce5e648aa33de975a3de2b, type: 2}
-  amount: 2
+  item: {fileID: 11400000, guid: d907bb840106ec141865b94da8b7a31d, type: 2}
+  amount: 1
   timeToWakeUp: 2

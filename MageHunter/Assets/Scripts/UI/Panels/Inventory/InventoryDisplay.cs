@@ -50,22 +50,23 @@ public class InventoryDisplay : BasePanelUIDisplay
         }
     }
 
-    public void HandleRightClick(ItemUIDisplay obj)
+    public void HandleRightClick(BaseItemUIDisplay obj)
     {
-        if (isInDropMenu)
+        ItemUIDisplay newObj = (ItemUIDisplay)obj;
+        if (isInDropMenu || newObj == null)
         {
             return;
         }
         if (currentlyDraggedItemIndex != -1)
         {
             InventorySlot slot = inventory.Items[currentlyDraggedItemIndex];
-            if (!inventory.AddItemAt(slot.Item, 1, itemUIInstances.IndexOf(obj)))
+            if (!inventory.AddItemAt(slot.Item, 1, itemUIInstances.IndexOf(newObj)))
             {
                 return;
             }
             slot.RemoveAmount(1);
-            InventorySlot newSlot = inventory.Items[itemUIInstances.IndexOf(obj)];
-            obj.SetUp(newSlot.Item.icon, newSlot.Amount);
+            InventorySlot newSlot = inventory.Items[itemUIInstances.IndexOf(newObj)];
+            newObj.SetUp(newSlot.Item.icon, newSlot.Amount);
             if (dragableUI.enabled)
             {
                 dragableUI.SetData(slot.Item.icon, slot.Amount);
@@ -78,15 +79,20 @@ public class InventoryDisplay : BasePanelUIDisplay
                 return;
             }
         }
-        else if(!obj.Empty)
+        else if(!newObj.Empty)
         {
-            if (!obj.IsInActionMenu)
+            InventorySlot slot = inventory.Items[itemUIInstances.IndexOf(newObj)];
+            if (!newObj.IsInActionMenu && slot.Item.type != ItemType.MiscItem)
             {
-                obj.OpenActionMenu();
+                newObj.OpenFullActionMenu();
             }
-            else if(obj.IsInActionMenu)
+            else if (!newObj.IsInActionMenu && slot.Item.type == ItemType.MiscItem)
             {
-                obj.CloseActionMenu();
+                newObj.OpenDropActionMenu();
+            }
+            else if(newObj.IsInActionMenu)
+            {
+                newObj.CloseFullActionMenu();
             }
         }
     }
@@ -165,7 +171,7 @@ public class InventoryDisplay : BasePanelUIDisplay
             return;
         }
         InventorySlot slot = inventory.Items[index];
-        descriptionUIDisplay.Set(slot.Item.icon, slot.Item.name, slot.Item.description);
+        descriptionUIDisplay.Set(slot.Item.icon, slot.Item.itemName, slot.Item.description);
     }
 
     public void HandleItemUsed(ItemUIDisplay obj)
@@ -175,12 +181,25 @@ public class InventoryDisplay : BasePanelUIDisplay
         if (item != null)
         {
             item.Use();
+            inventory.RemoveItem(index, 1);
+            if (inventory.Items[index].Amount <= 0)
+            {
+                obj.ResetData();
+                obj.CloseFullActionMenu();
+                if (obj.borderImage.IsActive())
+                {
+                    obj.Deselect();
+                    descriptionUIDisplay.ResetDescription();
+                }
+                return;
+            }
+            obj.SetAmount(inventory.Items[index].Amount);
         }
     }
 
     public void HandleItemDropped(ItemUIDisplay obj)
     {
-        obj.CloseActionMenu();
+        obj.CloseFullActionMenu();
         dropMenu.SetActive(true);
         int index = itemUIInstances.IndexOf(obj);
         itemToDropIndex = index;
@@ -206,6 +225,11 @@ public class InventoryDisplay : BasePanelUIDisplay
             if (inventory.Items[itemToDropIndex].Item == null)
             {
                 itemUIInstances[itemToDropIndex].ResetData();
+                if (itemUIInstances[itemToDropIndex].borderImage.IsActive())
+                {
+                    itemUIInstances[itemToDropIndex].Deselect();
+                    descriptionUIDisplay.ResetDescription();
+                }
             }
             else
             {

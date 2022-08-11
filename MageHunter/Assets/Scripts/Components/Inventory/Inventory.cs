@@ -45,6 +45,7 @@ public class Inventory : ScriptableObject
                 index++;
             }
             items[index] = new InventorySlot(item, amount);
+            index = 0;
             return true;
         }
 
@@ -114,6 +115,29 @@ public class Inventory : ScriptableObject
         }
 
         onItemDrop.Invoke(itemToDrop);
+        return true;
+    }
+
+    public virtual bool RemoveItem(int index, int amount)
+    {
+        if (index < 0 || index >= Capacity)
+        {
+            return false;
+        }
+
+        InventorySlot slot = items[index];
+
+        if (amount > slot.Amount)
+        {
+            return false;
+        }
+
+        slot.RemoveAmount(amount);
+        if (slot.Amount <= 0)
+        {
+            slot.Reset();
+        }
+
         return true;
     }
 

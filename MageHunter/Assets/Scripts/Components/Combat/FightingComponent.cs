@@ -168,6 +168,35 @@ public class FightingComponent : MonoBehaviour
         return true;
     }
 
+    public bool FreeSlot(SpellType spellType, int index)
+    {
+        if (spellType == SpellType.Light)
+        {
+            if (index < 0 || index >= lightSpells.Length)
+            {
+                return false;
+            }
+
+            lightSpells[index].ResetSpell();
+            lightSpellCaster = lightSpells[lightIdx];
+            return true;
+        }
+        else if (spellType == SpellType.Heavy)
+        {
+            if (index < 0 || index >= heavySpells.Length)
+            {
+                return false;
+            }
+
+            heavySpells[index].ResetSpell();
+            heavySpellCaster = heavySpells[heavyIdx];
+
+            return true;
+        }
+
+        return false;
+    }
+
     private bool ContainsSpell(SpellCaster[] spells, SpellScroll spellScroll)
     {
         for (int i = 0; i < spells.Length; i++)
@@ -229,5 +258,10 @@ public class FightingComponent : MonoBehaviour
         {
             mana = maxMana;
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        spellBook.Clear();
     }
 }
