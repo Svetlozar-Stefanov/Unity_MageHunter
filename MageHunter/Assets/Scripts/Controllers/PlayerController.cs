@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     [Header("Components")]
     [SerializeField] private InputReader inputReader;
     [SerializeField] private MovementComponent movementComponent;
+    [SerializeField] private HealthComponent healthComponent;
     [SerializeField] private FightingComponent fightingComponent;
     [SerializeField] private AnimatorComponent animatorComponent;
 
@@ -14,6 +15,8 @@ public class PlayerController : MonoBehaviour
     private bool startJump = false;
 
     public FightingComponent FightingComponent { get => fightingComponent; }
+
+    public HealthComponent HealthComponent { get => healthComponent; }
 
     private void OnEnable()
     {
@@ -121,5 +124,10 @@ public class PlayerController : MonoBehaviour
         }
 
         return offset;
+    }
+
+    public void OnDeath()
+    {
+        gameObject.SetActive(false);
     }
 }

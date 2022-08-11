@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb801db94e2fef743898f16dfca9a771, type: 3}
   m_Name: Heavy_Spell_1 1
   m_EditorClassIdentifier: 
-  prefab: {fileID: 4768909484186788735, guid: 732f0c46296b8a34eb18d170fc3e7868, type: 3}
+  prefab: {fileID: 2354797242028354106, guid: 12cd0d6065b19f04ba23e05917d866e8, type: 3}
   type: 1
   icon: {fileID: 21300000, guid: 7c897c37470cbc24398b041b27d3f99e, type: 3}
-  itemName: Heavy Spell 1
-  description: 
+  itemName: Heavy Spell Scroll
+  description: Powerful something...
   sellValue: 0
   projectilePrefab: {fileID: 4768909484186788735, guid: 732f0c46296b8a34eb18d170fc3e7868, type: 3}
   spellType: 1

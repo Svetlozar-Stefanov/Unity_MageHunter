@@ -40,6 +40,5 @@ public class HealthComponent : MonoBehaviour
     protected void Die()
     {
         onDeathEvent.Invoke();
-        Destroy(gameObject);
     }
 }

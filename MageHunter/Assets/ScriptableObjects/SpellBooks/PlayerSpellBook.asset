@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: PlayerSpellBook
   m_EditorClassIdentifier: 
   items:
-  - item: {fileID: 11400000, guid: f1f32fe45ded80e4a928056abb0659f3, type: 2}
+  - item: {fileID: 0}
     amount: 0
-  - item: {fileID: 11400000, guid: 29bbd7f5cca49fe44b97b5cc5a0e7e3f, type: 2}
+  - item: {fileID: 0}
     amount: 0
-  - item: {fileID: 11400000, guid: 2eb72514816307d4380ecc96e8c1df52, type: 2}
+  - item: {fileID: 0}
     amount: 0
-  - item: {fileID: 11400000, guid: 7c2eb32a4f9812043b3503ef9fd1c1fe, type: 2}
+  - item: {fileID: 0}
     amount: 0
-  - item: {fileID: 11400000, guid: 8d5f692db1f60a3468953d4c70285a79, type: 2}
+  - item: {fileID: 0}
     amount: 0
-  - item: {fileID: 11400000, guid: 6229ccb7d4cf44e4799db05155f7ca6c, type: 2}
+  - item: {fileID: 0}
     amount: 0
   - item: {fileID: 0}
     amount: 0
