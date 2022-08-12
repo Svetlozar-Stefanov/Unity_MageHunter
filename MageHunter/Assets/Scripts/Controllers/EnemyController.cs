@@ -1,39 +1,54 @@
 using Assets.Scripts.Controllers;
+using Pathfinding;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour, IDamageableController<float>
 {
+    [Header("Components")]
     [SerializeField] private HealthComponent healthComponent;
     [SerializeField] private EnemyInventoryComponent inventoryComponent;
     [SerializeField] private MovementComponent movementComponent;
 
+    [SerializeField] private Transform target;
+    [SerializeField] private float nextWaypointDistance = 3.0f;
+
+    [Header("AI Config")]
     [SerializeField] private float walkRadius = 5;
+    [SerializeField] private float waitTime = 5;
     [SerializeField] private Vector2 chaseDistance = new Vector2(10, 10);
-    [SerializeField] private Vector2 attackRange = new Vector2(1,1);
+
     [SerializeField] private int damage = 10;
- 
+
     public SpriteRenderer sprite;
-
     private Rigidbody2D rb2d;
-    private PlayerController player;
-    private Vector3 startPos = new Vector3(0,0,0);
-    private float targetPos = 0;
-    private bool isRoaming = true;
+    private Vector3 startPos = new Vector3(0, 0, 0);
 
+    private Seeker seeker;
+    private Path path;
+    private int currentWaypoint = 0;
+    private bool reachedEndOfPath = false;
+
+    private Vector2 targetPos;
     private float timer = 0.0f;
+    private float waitTimer = 0.0f;
     private bool isHit = false;
     private bool isDead = false;
+
+    private enum State
+    {
+        Waiting,
+        Roaming,
+        Chasing
+    }
+    private State state;
 
     private void Awake()
     {
         rb2d = gameObject.GetComponent<Rigidbody2D>();
-        PlayerController player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-        if (player != null)
-        {
-            this.player = player;
-        }
+        seeker = gameObject.GetComponent<Seeker>();
         startPos = transform.position;
-        targetPos = GetRandomRoamingPos();
+        state = State.Roaming;
+        seeker.StartPath(startPos, GetRandomRoamingPos(), HandlePathFound);
     }
 
     private void Update()
@@ -53,58 +68,88 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
 
     private void FixedUpdate()
     {
-        if ((transform.position - player.transform.position).magnitude < attackRange.magnitude)
+        if (path == null)
         {
-            player.GetComponent<HealthComponent>().TakeDamage(damage);
-
-            if (player.transform.position.x - transform.position.x > 0.0f)
-            {
-                rb2d.velocity = new Vector2(-20, rb2d.velocity.y);
-            }
-            else if(player.transform.position.x - transform.position.x < 0.0f)
-            {
-                rb2d.velocity = new Vector2(20, rb2d.velocity.y);
-            }
-            
+            return;
         }
-        else if ((transform.position - player.transform.position).magnitude < chaseDistance.magnitude)
+
+        if (reachedEndOfPath)
         {
-            isRoaming = false;
-            targetPos = player.transform.position.x;
+            if (state == State.Chasing)
+            {
+                seeker.StartPath(rb2d.position, target.position, HandlePathFound);
+            }
+            else if (state == State.Roaming)
+            {
+
+                state = State.Waiting;
+            }
+            else if (state == State.Waiting && waitTimer < waitTime)
+            {
+                waitTimer += 0.05f;
+            }
+            else if(waitTimer >= waitTime)
+            {
+                state = State.Roaming;
+                waitTimer = 0;
+                seeker.StartPath(rb2d.position, GetRandomRoamingPos(), HandlePathFound);
+            }
+        }
+
+        if (currentWaypoint >= path.vectorPath.Count)
+        {
+            reachedEndOfPath = true;
+            return;
         }
         else
         {
-            isRoaming = true;
+            reachedEndOfPath = false;
         }
-        HandleMovement();
-    }
 
-    //private float GetDistance(Vector2 v1, Vector2 v2)
-    //{
-    //    return Mathf.Sqrt(((v1.x - v2.x) * (v1.x - v2.x)) + ((v1.y - v2.y) * (v1.y - v2.y)));
-    //}
+        if ((transform.position - target.transform.position).magnitude < chaseDistance.magnitude)
+        {
+            if (state != State.Chasing)
+            {
+                seeker.StartPath(rb2d.position, target.position, HandlePathFound);
+            }
+            state = State.Chasing;
+        }
+        else
+        {
+            if (state != State.Roaming)
+            {
+                seeker.StartPath(rb2d.position, GetRandomRoamingPos(), HandlePathFound);
+            }
+            state = State.Roaming;
+        }
+
+        Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb2d.position).normalized;
+        movementComponent.Move2D(direction);
+
+        if (!reachedEndOfPath && Vector2.Distance(rb2d.position, path.vectorPath[currentWaypoint]) < nextWaypointDistance)
+        {
+            currentWaypoint++;
+        }
+    }
 
     private void HandleMovement()
     {
-        float distanceBetween = (transform.position.x - targetPos);
-
-        if (Mathf.Abs(distanceBetween) < 0.1f && isRoaming)
-        {
-            targetPos = GetRandomRoamingPos();
-        }
-        else if (distanceBetween < 0.0f)
-        {
-            movementComponent.Move(1);
-        }
-        else if (distanceBetween > 0.0f)
-        {
-            movementComponent.Move(-1);
-        }
+        
     }
 
-    private float GetRandomRoamingPos()
+    private void HandlePathFound(Path p)
     {
-        return startPos.x + Random.Range(-1, 2) * Random.Range(1.0f, walkRadius);
+        if (p.error)
+        {
+            return;
+        }
+        path = p;
+        currentWaypoint = 0;
+    }
+
+    private Vector3 GetRandomRoamingPos()
+    {
+        return startPos + new Vector3((Random.Range(-1, 2) * Random.Range(5.0f, walkRadius)), startPos.y);
     }
 
     public void TakeDamage(float damage)

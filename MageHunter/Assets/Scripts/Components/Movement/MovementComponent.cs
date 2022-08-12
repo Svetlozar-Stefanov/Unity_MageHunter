@@ -41,6 +41,7 @@ public class MovementComponent : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Debug.Log(isGrounded);
         GroundCheckCalc();
 
         IsFallingCalc();
@@ -63,6 +64,29 @@ public class MovementComponent : MonoBehaviour
                 Flip();
             }
             else if (direction < 0.0f && facingRight)
+            {
+                Flip();
+            }
+        }
+    }
+
+    public void Move2D(Vector2 direction)
+    {
+        if (isGrounded || airControl)
+        {
+            Vector3 targetVelocity = new Vector2(direction.x * movementSpeed * Time.deltaTime * 5, direction.y * movementSpeed * Time.deltaTime * 5);
+            if (movementSmoothing > 0.0f)
+            {
+                targetVelocity = Vector3.SmoothDamp(rb2d.velocity, targetVelocity, ref currentVelocity, movementSmoothing);
+            }
+
+            rb2d.velocity = targetVelocity;
+
+            if (direction.x > 0.0f && !facingRight)
+            {
+                Flip();
+            }
+            else if (direction.x < 0.0f && facingRight)
             {
                 Flip();
             }
