@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public enum ItemType
 {
     MiscItem,
-    SpellScroll
+    SpellScroll,
+    Potion
 }
 
 public abstract class BaseItem : ScriptableObject

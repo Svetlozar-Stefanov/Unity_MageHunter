@@ -20,9 +20,9 @@ MonoBehaviour:
   sellValue: 0
   projectilePrefab: {fileID: 4768909484186788735, guid: 8bd124802f03fa344afa633eb3d42ee3, type: 3}
   spellType: 0
-  speed: 40
+  speed: 50
   damage: 10
-  cooldown: 10
+  cooldown: 5
   manaCost: 5
   shouldBounce: 0
   hasLifespan: 1

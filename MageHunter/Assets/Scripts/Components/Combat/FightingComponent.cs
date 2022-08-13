@@ -7,7 +7,7 @@ public class FightingComponent : MonoBehaviour
     const int LIGHT_SPELL_COUNT = 3;
     const int HEAVY_SPELL_COUNT = 3;
 
-    const float MANA_REGEN = 0.01f;
+    const float MANA_REGEN = 0.05f;
 
     [Header("Setup")]
     [SerializeField] private Camera mainCamera;

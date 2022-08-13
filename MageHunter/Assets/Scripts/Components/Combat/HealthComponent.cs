@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class HealthComponent : MonoBehaviour
 {
     [Header("Properties")]
-    [SerializeField] private float MaxHealth;
+    [SerializeField] private float maxHealth;
 
     [Header("Events")]
     [SerializeField] private UnityEvent onTakeDamage;
@@ -12,9 +12,13 @@ public class HealthComponent : MonoBehaviour
 
     private float health;
 
-    private void Awake()
+    public float Health { get => health; }
+
+    public float MaxHealth { get => maxHealth; }
+
+private void Awake()
     {
-        health = MaxHealth;
+        health = maxHealth;
 
         if (onDeathEvent == null)
         {
@@ -23,6 +27,20 @@ public class HealthComponent : MonoBehaviour
         if (onTakeDamage == null)
         {
             onTakeDamage = new UnityEvent();
+        }
+    }
+
+    public virtual void Heal(float amount)
+    {
+        if (amount < 0.0f)
+        {
+            return;
+        }
+
+        health += amount;
+        if (health > maxHealth)
+        {
+            health = maxHealth;
         }
     }
 

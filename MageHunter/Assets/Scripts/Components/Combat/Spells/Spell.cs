@@ -51,7 +51,7 @@ public class Spell : MonoBehaviour
     public virtual void OnTriggerEnter2D(Collider2D other)
     {
         IDamageableController<float> damageable = other.GetComponent<IDamageableController<float>>();
-        if (damageable != null)
+        if (damageable != null && !other.isTrigger && other.tag != "Player")
         {
             damageable.TakeDamage(spell.Damage);
             Destroy(gameObject);

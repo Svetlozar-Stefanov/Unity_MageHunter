@@ -21,9 +21,9 @@ MonoBehaviour:
   projectilePrefab: {fileID: 4768909484186788735, guid: ee2dbba2bda36a543a93ce2aa20b864f, type: 3}
   spellType: 0
   speed: 40
-  damage: 10
-  cooldown: 10
-  manaCost: 5
+  damage: 20
+  cooldown: 15
+  manaCost: 10
   shouldBounce: 0
   hasLifespan: 1
   lifespan: 5

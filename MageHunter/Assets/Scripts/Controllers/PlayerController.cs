@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Controllers;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageableController<float>
 {
     [Header("Components")]
     [SerializeField] private InputReader inputReader;
@@ -15,8 +16,6 @@ public class PlayerController : MonoBehaviour
     private bool startJump = false;
 
     public FightingComponent FightingComponent { get => fightingComponent; }
-
-    public HealthComponent HealthComponent { get => healthComponent; }
 
     private void OnEnable()
     {
@@ -128,6 +127,13 @@ public class PlayerController : MonoBehaviour
 
     public void OnDeath()
     {
-        gameObject.SetActive(false);
+        inputReader.DisableAllInput();
+        Application.Quit();
+        UnityEditor.EditorApplication.isPlaying = false;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        healthComponent.TakeDamage(damage);
     }
 }

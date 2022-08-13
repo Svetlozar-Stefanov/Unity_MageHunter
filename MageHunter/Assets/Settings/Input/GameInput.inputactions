@@ -393,6 +393,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CloseSpellBook",
+                    "type": "Button",
+                    "id": "78a19feb-4cf9-4e8f-a5c1-0dd05e7f8406",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -514,6 +523,17 @@
                     "processors": "",
                     "groups": "Keyboard and Mouse",
                     "action": "OpenSpellBook",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "12112433-80b8-4409-815d-7ad088563efa",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "CloseSpellBook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

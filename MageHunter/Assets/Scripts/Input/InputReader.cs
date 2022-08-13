@@ -166,6 +166,16 @@ public class InputReader : ScriptableObject, GameInput.IInGameActions, GameInput
 		}
 	}
 
+	public void OnCloseSpellBook(InputAction.CallbackContext context)
+	{
+		if (spellBookIsOpen && closeSpellBookEvent != null)
+		{
+			EnableInGameInput();
+			spellBookIsOpen = false;
+			closeSpellBookEvent.Invoke();
+		}
+	}
+
 	public void EnableInGameInput()
 	{
 		gameInput.InGame.Enable();

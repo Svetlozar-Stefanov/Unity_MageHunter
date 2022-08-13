@@ -415,6 +415,15 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CloseSpellBook"",
+                    ""type"": ""Button"",
+                    ""id"": ""78a19feb-4cf9-4e8f-a5c1-0dd05e7f8406"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -538,6 +547,17 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""action"": ""OpenSpellBook"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""12112433-80b8-4409-815d-7ad088563efa"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""CloseSpellBook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -584,6 +604,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         m_InDynamicMenu_Move = m_InDynamicMenu.FindAction("Move", throwIfNotFound: true);
         m_InDynamicMenu_MenuMousePos = m_InDynamicMenu.FindAction("MenuMousePos", throwIfNotFound: true);
         m_InDynamicMenu_OpenSpellBook = m_InDynamicMenu.FindAction("OpenSpellBook", throwIfNotFound: true);
+        m_InDynamicMenu_CloseSpellBook = m_InDynamicMenu.FindAction("CloseSpellBook", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -801,6 +822,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_InDynamicMenu_Move;
     private readonly InputAction m_InDynamicMenu_MenuMousePos;
     private readonly InputAction m_InDynamicMenu_OpenSpellBook;
+    private readonly InputAction m_InDynamicMenu_CloseSpellBook;
     public struct InDynamicMenuActions
     {
         private @GameInput m_Wrapper;
@@ -809,6 +831,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_InDynamicMenu_Move;
         public InputAction @MenuMousePos => m_Wrapper.m_InDynamicMenu_MenuMousePos;
         public InputAction @OpenSpellBook => m_Wrapper.m_InDynamicMenu_OpenSpellBook;
+        public InputAction @CloseSpellBook => m_Wrapper.m_InDynamicMenu_CloseSpellBook;
         public InputActionMap Get() { return m_Wrapper.m_InDynamicMenu; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -830,6 +853,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @OpenSpellBook.started -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnOpenSpellBook;
                 @OpenSpellBook.performed -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnOpenSpellBook;
                 @OpenSpellBook.canceled -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnOpenSpellBook;
+                @CloseSpellBook.started -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnCloseSpellBook;
+                @CloseSpellBook.performed -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnCloseSpellBook;
+                @CloseSpellBook.canceled -= m_Wrapper.m_InDynamicMenuActionsCallbackInterface.OnCloseSpellBook;
             }
             m_Wrapper.m_InDynamicMenuActionsCallbackInterface = instance;
             if (instance != null)
@@ -846,6 +872,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @OpenSpellBook.started += instance.OnOpenSpellBook;
                 @OpenSpellBook.performed += instance.OnOpenSpellBook;
                 @OpenSpellBook.canceled += instance.OnOpenSpellBook;
+                @CloseSpellBook.started += instance.OnCloseSpellBook;
+                @CloseSpellBook.performed += instance.OnCloseSpellBook;
+                @CloseSpellBook.canceled += instance.OnCloseSpellBook;
             }
         }
     }
@@ -884,5 +913,6 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnMenuMousePos(InputAction.CallbackContext context);
         void OnOpenSpellBook(InputAction.CallbackContext context);
+        void OnCloseSpellBook(InputAction.CallbackContext context);
     }
 }

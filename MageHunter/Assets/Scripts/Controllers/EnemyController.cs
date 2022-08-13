@@ -8,7 +8,8 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
     [SerializeField] private HealthComponent healthComponent;
     [SerializeField] private EnemyInventoryComponent inventoryComponent;
     [SerializeField] private MovementComponent movementComponent;
-
+    [SerializeField] private AnimatorComponent animatorComponent;
+ 
     [SerializeField] private Transform target;
     [SerializeField] private float nextWaypointDistance = 3.0f;
 
@@ -44,6 +45,11 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
 
     private void Awake()
     {
+        target = GameObject.FindWithTag("Player").transform;
+        if (target == null)
+        {
+            Destroy(gameObject);
+        }
         rb2d = gameObject.GetComponent<Rigidbody2D>();
         seeker = gameObject.GetComponent<Seeker>();
         startPos = transform.position;
@@ -75,14 +81,10 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
 
         if (reachedEndOfPath)
         {
-            if (state == State.Chasing)
+            if (state == State.Roaming)
             {
-                seeker.StartPath(rb2d.position, target.position, HandlePathFound);
-            }
-            else if (state == State.Roaming)
-            {
-
                 state = State.Waiting;
+                animatorComponent.IsMoving(false);
             }
             else if (state == State.Waiting && waitTimer < waitTime)
             {
@@ -110,9 +112,10 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
         {
             if (state != State.Chasing)
             {
-                seeker.StartPath(rb2d.position, target.position, HandlePathFound);
+                InvokeRepeating("UpdateTargetPath", 0.0f, 0.5f);
             }
             state = State.Chasing;
+            animatorComponent.IsMoving(true);
         }
         else
         {
@@ -120,7 +123,9 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
             {
                 seeker.StartPath(rb2d.position, GetRandomRoamingPos(), HandlePathFound);
             }
+            CancelInvoke();
             state = State.Roaming;
+            animatorComponent.IsMoving(true);
         }
 
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb2d.position).normalized;
@@ -132,9 +137,9 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
         }
     }
 
-    private void HandleMovement()
+    private void UpdateTargetPath()
     {
-        
+        seeker.StartPath(rb2d.position, target.position, HandlePathFound);
     }
 
     private void HandlePathFound(Path p)
@@ -149,7 +154,7 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
 
     private Vector3 GetRandomRoamingPos()
     {
-        return startPos + new Vector3((Random.Range(-1, 2) * Random.Range(5.0f, walkRadius)), startPos.y);
+        return startPos + new Vector3((Random.Range(-1, 2) * Random.Range(5.0f, walkRadius)), 0);
     }
 
     public void TakeDamage(float damage)
@@ -166,6 +171,31 @@ public class EnemyController : MonoBehaviour, IDamageableController<float>
             isDead = true;
             inventoryComponent.DropRandomLoot();
             Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (gameObject == collision.gameObject)
+        {
+            return;
+        }
+
+        IDamageableController<float> player = collision.GetComponent<IDamageableController<float>>();
+        if (player != null && collision.tag == "Player")
+        {
+            player.TakeDamage(damage);
+            float orientation = (target.position.x - transform.position.x);
+            Debug.Log(orientation);
+            if (orientation < 0.0f)
+            {
+                rb2d.AddForce(new Vector2(10, 5), ForceMode2D.Impulse);
+            }
+            else if (orientation > 0.0f)
+            {
+                rb2d.AddForce(new Vector2(-10, 5), ForceMode2D.Impulse);
+            }
+
         }
     }
 }
